@@ -1084,3 +1084,86 @@
 @media (max-width: 768px) {
   .brand-bar .brand-logo { height: 55px; }
 }
+
+/* --- Mobile Polish: cohesive, professional, responsive tweaks --- */
+/* Global typography scaling for small screens */
+@media (max-width: 576px) {
+    html { font-size: 15px; }
+    body { line-height: 1.55; }
+    h1 { font-size: 1.4rem !important; }
+    h2 { font-size: 1.25rem !important; }
+    h3 { font-size: 1.1rem !important; }
+    h4 { font-size: 1rem !important; }
+    .display-1 { font-size: 1.75rem !important; line-height: 1.2; }
+    .display-2 { font-size: 1.6rem !important; line-height: 1.25; }
+    .display-3 { font-size: 1.45rem !important; line-height: 1.25; }
+    .display-6 { font-size: 1.25rem !important; line-height: 1.3; }
+    p, .lead { font-size: 0.95rem; }
+}
+
+/* Section spacing tightening on mobile */
+@media (max-width: 576px) {
+    .container-fluid.py-5 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+    .mt-5 { margin-top: 2rem !important; }
+    .mb-5 { margin-bottom: 2rem !important; }
+    .my-5 { margin-top: 2rem !important; margin-bottom: 2rem !important; }
+    .p-5 { padding: 1.5rem !important; }
+    .px-5 { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+    .row.g-5 { --bs-gutter-x: 1rem; --bs-gutter-y: 1rem; }
+}
+
+/* Feature grid cards (4-up) */
+@media (max-width: 576px) {
+    .feature-item { padding: 1.25rem !important; }
+    .feature-item h5 { font-size: 1rem; margin-bottom: 0.5rem !important; }
+    .feature-item p { font-size: 0.95rem; }
+    .icon-box-primary i, .icon-box-light i { font-size: 42px; }
+}
+
+/* Services (Mission) cards */
+@media (max-width: 576px) {
+    .service-item { padding: 1.25rem 1rem !important; }
+    .service-item h5 { font-size: 1rem; margin-bottom: 0.5rem !important; }
+    .service-item p { font-size: 0.95rem; }
+    .service-item .icon-box-primary i { font-size: 44px !important; }
+}
+
+/* Header carousel caption & hero text */
+@media (max-width: 576px) {
+    .carousel-caption { padding: 0.75rem 1rem !important; }
+    .header-carousel .display-1, #header-carousel .display-1, .carousel-caption h1 {
+        font-size: 1.5rem !important; line-height: 1.25 !important;
+    }
+}
+
+/* Tchad-IA video play button: shrink pseudo elements too */
+@media (max-width: 576px) {
+    .btn-play { padding: 14px 16px 16px 22px; }
+    .btn-play:before, .btn-play:after { width: 70px; height: 70px; }
+    .btn-play span { border-left: 22px solid #FFFFFF; border-top: 14px solid transparent; border-bottom: 14px solid transparent; }
+}
+
+/* Team section adjustments */
+@media (max-width: 576px) {
+    .container-team .row.g-5 { --bs-gutter-x: 1rem; --bs-gutter-y: 1.25rem; }
+    .container-team h1 { font-size: 1.35rem !important; }
+    .container-team h3 { font-size: 1.1rem !important; }
+    .container-team p { font-size: 0.95rem; }
+}
+
+/* Footer newsletter & meta */
+@media (max-width: 576px) {
+    .footer .input-group .form-control { padding: 0.6rem 0.9rem !important; font-size: 0.95rem; }
+    .footer .input-group .btn { padding: 0.6rem 0.9rem !important; font-size: 0.95rem; }
+    .copyright .row { row-gap: 0.5rem; }
+}
+
+/* Back-to-top tappable size & position */
+@media (max-width: 576px) {
+    .back-to-top { width: 2.75rem !important; height: 2.75rem !important; bottom: 0.9rem !important; right: 0.9rem !important; }
+}
+
+/* Ensure containers have breathing room on small screens */
+@media (max-width: 576px) {
+    .container { padding-left: 0.9rem; padding-right: 0.9rem; }
+}
