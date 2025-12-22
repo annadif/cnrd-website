@@ -139,21 +139,29 @@
     .navbar .navbar-nav .nav-link  {
         margin-right: 0;
         padding: 10px 0;
+        color: #FFD300 !important;
     }
 
     .navbar .navbar-nav {
         margin-top: 15px;
-        border-top: 1px solid #EEEEEE;
+        border-top: 1px solid rgba(255, 211, 0, 0.2);
+    }
+    
+    .navbar .navbar-nav .nav-link:hover,
+    .navbar .navbar-nav .nav-link.active {
+        color: #FFFFFF !important;
     }
 }
 
 @media (min-width: 992px) {
     .sticky-top {
         margin-top: -34px;
+        background-color: #FFFFFF !important;
     }
 
     .navbar {
         height: 68px;
+        background-color: #FFFFFF !important;
     }
 
     /* center the navbar items horizontally on desktop */
