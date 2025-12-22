@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Admin - Ajouter Toumai / Article - CNRD</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <style>
+    #auth-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 2000; display: flex; align-items: center; justify-content: center; }
+    #auth-card { background: #fff; padding: 1.5rem; border-radius: 8px; width: min(90%, 420px); box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,0.25); }
+    #auth-card h2 { margin-bottom: 0.75rem; font-size: 1.25rem; text-align: center; }
+    #auth-error { display: none; }
+  </style>
+</head>
+<body>
+  <div id="auth-overlay">
+    <div id="auth-card">
+      <h2>Authentification</h2>
+      <div class="mb-3">
+        <label class="form-label">Utilisateur</label>
+        <input id="auth-user" class="form-control" type="text" autocomplete="username">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Mot de passe</label>
+        <input id="auth-pass" class="form-control" type="password" autocomplete="current-password">
+      </div>
+      <div id="auth-error" class="alert alert-danger py-2 px-3">Identifiants incorrects.</div>
+      <button id="auth-submit" class="btn btn-primary w-100">Se connecter</button>
+    </div>
+  </div>
+
+  <div id="admin-content" style="display:none;">
+  <!-- Brand / Navbar (same style as other pages) -->
+  <div class="container-fluid text-white pt-4 pb-5 d-none d-lg-flex" style="background-color: #1111ab;">
+    <div class="container pb-2">
+      <div class="d-flex align-items-center justify-content-start">
+        <img src="img/logo.jpeg" alt="Logo CNRD" style="height: 80px; width: auto; margin-right: 20px;">
+        <a href="index.html" class="h2 mb-0" style="color: #FFD300;">Centre National De Recherche Pour le Developpement</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid sticky-top">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg navbar-light bg-white py-lg-0 px-lg-3">
+        <a href="index.html" class="navbar-brand d-lg-none">
+          <h1 class="text-primary m-0" style="justify-content:center;text-align:center;">CNRD</h1>
+        </a>
+        <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav">
+                        <a href="index.html" class="nav-item nav-link">Accueil</a>
+                        <a href="index.html#about" class="nav-item nav-link">À propos</a>
+                        <a href="index.html#mission" class="nav-item nav-link">Mission</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Directions</a>
+                            <div class="dropdown-menu bg-light m-0">
+                                <a href="direction-technique.html" class="dropdown-item">Direction Technique</a>
+                                <a href="direction-paleontologie.html" class="dropdown-item">Direction Paléontologie & Patrimoine</a>
+                                <a href="direction-sciences-tech.html" class="dropdown-item">Direction des Sciences et Technologies</a>
+                            </div>
+                        </div>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Revue du CNRD</a>
+                            <div class="dropdown-menu bg-light m-0">
+                                <div class="nav-item dropdown">
+                                    <a href="#" class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown">Revue Scientifique</a>
+                                    <div class="dropdown-menu bg-light m-0">
+                                        <a href="serie-a.html" class="dropdown-item">Série A</a>
+                                        <a href="serie-b.html" class="dropdown-item">Série B</a>
+                                        <a href="serie-c.html" class="dropdown-item">Série C</a>
+                                    </div>
+                                </div>
+                                <a href="toumai-action.html" class="dropdown-item">Toumai Action</a>
+                                <a href="vendredi-recherche.html" class="dropdown-item">Vendredi de la Recherche</a>
+                            </div>
+                        </div>
+                        <a href="index.html#contact" class="nav-item nav-link">Contact</a>
+                    </div>
+                </div>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container-fluid page-header py-5 mb-5">
+    <div class="container text-center">
+      <h1 class="display-4 text-white mb-3">Admin — Ajouter Toumai & Article</h1>
+      <p class="text-white-50 mb-0">Page d'administration (sans authentification) pour ajouter des enregistrements.</p>
+    </div>
+  </div>
+
+  <div class="container py-5">
+        <div class="row gx-4">
+            <!-- Buttons that open modals for Toumai and Article -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Ajouter Toumai</h5>
+                        <p class="card-text">Ouvrir le formulaire d'ajout Toumai dans une fenêtre modale.</p>
+                        <div class="mt-auto d-flex justify-content-between">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#adminToumaiModal">Ouvrir formulaire</button>
+                            <a href="toumai_view.html" class="btn btn-outline-secondary">Voir Toumai</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Ajouter Article</h5>
+                        <p class="card-text">Ouvrir le formulaire d'ajout Article dans une fenêtre modale.</p>
+                        <div class="mt-auto d-flex justify-content-between">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#adminArticleModal">Ouvrir formulaire</button>
+                            <a href="articles_view.html" class="btn btn-outline-secondary">Voir Articles</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div
+ 
+        <!-- Modal: Admin Toumai -->
+        <div class="modal fade" id="adminToumaiModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <form id="admin-toumai-form" enctype="multipart/form-data" class="modal-body">
+                        <div class="modal-header"><h5 class="modal-title">Ajouter Toumai</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                        <div class="p-3">
+                            <!-- changed names to match db-connect.php -->
+                            <div class="mb-3"><label class="form-label">Numéro</label><input type="text" name="Numéro" class="form-control" required></div>
+                            <div class="mb-3"><label class="form-label">Date de publication</label><input type="date" name="Date de publication" class="form-control" required></div>
+                            <div class="mb-3"><label class="form-label">Thème</label><input type="text" name="Thème" class="form-control" required></div>
+                            <div class="mb-3"><label class="form-label">Auteur</label><input type="text" name="Auteur" class="form-control" required></div>
+                            <input type="hidden" name="MAX_FILE_SIZE" value="10485760">
+                            <div class="mb-3">
+                              <label class="form-label">PDF</label>
+                              <input type="file" name="PDF" accept="application/pdf" class="form-control">
+                            </div>
+                            <div id="admin-toumai-msg" class="form-text"></div>
+                        </div>
+                        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button><button type="submit" class="btn btn-primary">Ajouter Toumai</button></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+ 
+        <!-- Modal: Admin Article -->
+        <div class="modal fade" id="adminArticleModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <form id="admin-article-form" enctype="multipart/form-data" class="modal-body">
+                        <div class="modal-header"><h5 class="modal-title">Ajouter Article</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                        <div class="p-3">
+                            <div class="row g-3">
+                              <!-- changed names to match db-connect.php -->
+                              <div class="col-md-3"><label class="form-label">Auteur</label><input type="text" name="Auteur" class="form-control" required></div>
+                              <div class="col-md-4"><label class="form-label">Thème</label><input type="text" name="Thème" class="form-control" required></div>
+                              <div class="col-md-2"><label class="form-label">Date de Publication</label><input type="date" name="Date de Publication" class="form-control" required></div>
+                              <div class="col-md-3"><label class="form-label">Numéro</label><input type="text" name="Numéro" class="form-control" required></div>
+                              <div class="col-md-3"><label class="form-label">Serie</label><input type="text" name="Serie" class="form-control" placeholder="Serie A / B / C" required></div>
+                              <input type="hidden" name="MAX_FILE_SIZE" value="10485760">
+                              <div class="col-12">
+                                <label class="form-label">PDF</label>
+                                <input type="file" name="PDF" class="form-control" accept="application/pdf">
+                              </div>
+                            </div>
+                            <div id="admin-article-msg" class="form-text mt-2"></div>
+                        </div>
+                        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button><button type="submit" class="btn btn-primary">Ajouter Article</button></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+ 
+    <!-- Tables: Toumai & Articles -->
+    <div class="row mt-4">
+      <div class="col-lg-6 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="card-title mb-0">Toumai — Liste</h5>
+              <button id="refresh-toumai" class="btn btn-sm btn-outline-secondary">Rafraîchir</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered" id="admin-toumai-table">
+                <thead class="table-light"><tr><th>Numéro</th><th>Date de publication</th><th>Thème</th><th>Auteur</th><th>PDF</th><th>Actions</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="card-title mb-0">Articles — Liste</h5>
+              <button id="refresh-articles" class="btn btn-sm btn-outline-secondary">Rafraîchir</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered" id="admin-articles-table">
+                <thead class="table-light"><tr><th>Numéro</th><th>Date de publication</th><th>Thème</th><th>Auteur</th><th>PDF</th><th>Actions</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer (same as main page) -->
+  <section id="contact">
+    <div class="container-fluid footer position-relative bg-dark text-white-50 py-5 wow fadeIn" data-wow-delay="0.1s">
+      <div class="container">
+        <div class="row g-5 py-5">
+          <div class="col-lg-6 pe-lg-5">
+            <a href="index.html" class="navbar-brand">
+              <h1 class="h1 mb-0" style="color: #FFD300;">CNRD</h1>
+            </a>
+            <p class="fs-5 mb-4">« Le CNRD stimule la recherche et l’innovation pour favoriser la science et la technologie au service du développement durable du Tchad. »</p>
+            <p><i class="fa fa-map-marker-alt me-2"></i>42CM+VR6, Rue de la Gendarmerie, N'Djamena</p>
+            <p><i class="fa fa-phone-alt me-2"></i>+235 **** ****</p>
+            <p><i class="fa fa-envelope me-2"></i>info@cnrd.com</p>
+            <div class="d-flex mt-4">
+              <a class="btn btn-lg-square btn-primary me-2" href="#"><i class="fab fa-twitter"></i></a>
+              <a class="btn btn-lg-square btn-primary me-2" href="#"><i class="fab fa-facebook-f"></i></a>
+              <a class="btn btn-lg-square btn-primary me-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+              <a class="btn btn-lg-square btn-primary me-2" href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+          <div class="col-lg-6 ps-lg-5">
+            <div class="row g-5">
+              <div class="col-sm-6">
+                <h4 class="text-light mb-4">Liens Rapides</h4>
+                <a class="btn btn-link" href="">A propos</a>
+                <a class="btn btn-link" href="">Contactez-nous</a>
+                <a class="btn btn-link" href="">Nos Services</a>
+                <a class="btn btn-link" href="">Termes & Conditions</a>
+                <a class="btn btn-link" href="">Support</a>
+              </div>
+              <div class="col-sm-12">
+                <h4 class="text-light mb-4">Newsletter</h4>
+                <div class="w-100">
+                  <div class="input-group">
+                    <input type="text" class="form-control border-0 py-3 px-4" style="background: rgba(255, 255, 255, .1);" placeholder="Votre adresse e-mail"><button class="btn btn-primary px-4">S'inscrire</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <div class="container-fluid copyright bg-dark text-white-50 py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0">&copy; <a href="#">CNRD TCHAD</a>. Tout Droit Réservé.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <p class="mb-0">Designed by <a href="">Bootstrap</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- scripts -->
+  <script>
+  // use PHP endpoints hosted locally
+  const API_BASE = window.location.origin;
+
+  // helper: escape
+  function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+
+  // UI helper
+  function showMsg(elId, text, isError) {
+    const el = document.getElementById(elId);
+    el.textContent = text || '';
+    el.classList.toggle('text-danger', !!isError);
+    el.classList.toggle('text-success', !isError && !!text);
+  }
+
+  async function extractError(res) {
+    try { const j = await res.json(); return j.error || j.message || JSON.stringify(j); }
+    catch { try { return await res.text(); } catch { return res.statusText || `HTTP ${res.status}`; } }
+  }
+
+  // load Toumai table
+  async function loadToumaiTable() {
+    const tbody = document.querySelector('#admin-toumai-table tbody');
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center">Chargement...</td></tr>';
+    try {
+      const res = await fetch('db-connect.php?action=list_toumai', { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const rows = await res.json();
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td>${escapeHtml(r['Numéro'])}</td>
+          <td>${r['Date de publication'] ? new Date(r['Date de publication']).toLocaleDateString() : ''}</td>
+          <td>${escapeHtml(r['Thème'])}</td>
+          <td>${escapeHtml(r['Auteur'])}</td>
+          <td>${r['PDF'] ? `<a class="btn btn-sm btn-outline-primary" href="${escapeHtml(r['PDF'])}" target="_blank">Ouvrir</a>` : ''}</td>
+          <td class="text-center">
+            <div class="btn-group btn-group-sm" role="group">
+              <button class="btn btn-warning" data-action="edit-toumai" data-id="${escapeHtml(r['Numéro'])}">Modifier</button>
+              <button class="btn btn-danger" data-action="delete-toumai" data-id="${escapeHtml(r['Numéro'])}">Supprimer</button>
+            </div>
+          </td>
+        </tr>
+      `).join('') || '<tr><td colspan="6" class="text-center">Aucun enregistrement</td></tr>';
+    } catch (err) {
+      tbody.innerHTML = '<tr><td colspan="6" class="text-danger">Erreur de chargement</td></tr>';
+      console.error('loadToumaiTable', err);
+    }
+  }
+
+  // load Articles table
+  async function loadArticlesTable() {
+    const tbody = document.querySelector('#admin-articles-table tbody');
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center">Chargement...</td></tr>';
+    try {
+      const res = await fetch('db-connect.php?action=list_articles', { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const rows = await res.json();
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td>${escapeHtml(r['Numéro'])}</td>
+          <td>${r['Date de Publication'] ? new Date(r['Date de Publication']).toLocaleDateString() : ''}</td>
+          <td>${escapeHtml(r['Thème'])}</td>
+          <td>${escapeHtml(r['Auteur'])}</td>
+          <td>${r['PDF'] ? `<a class="btn btn-sm btn-outline-primary" href="${escapeHtml(r['PDF'])}" target="_blank">Ouvrir</a>` : ''}</td>
+            <td class="text-center">
+              <div class="btn-group btn-group-sm" role="group">
+                <button class="btn btn-warning" data-action="edit-article" data-id="${escapeHtml(r['Numéro'])}">Modifier</button>
+                <button class="btn btn-danger" data-action="delete-article" data-id="${escapeHtml(r['Numéro'])}">Supprimer</button>
+              </div>
+            </td>
+        </tr>
+      `).join('') || '<tr><td colspan="6" class="text-center">Aucun enregistrement</td></tr>';
+    } catch (err) {
+      tbody.innerHTML = '<tr><td colspan="6" class="text-danger">Erreur de chargement</td></tr>';
+      console.error('loadArticlesTable', err);
+    }
+  }
+
+  // Edit modals (Toumai / Articles)
+  // Toumai Edit Modal structure
+  const toumaiEditModalHtml = `
+    <div class="modal fade" id="adminToumaiEditModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <form id="admin-toumai-edit-form" enctype="multipart/form-data" class="modal-body">
+            <div class="modal-header"><h5 class="modal-title">Modifier Toumai</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="p-3">
+              <div class="mb-3"><label class="form-label">Numéro</label><input type="text" name="Numéro" class="form-control" required></div>
+              <input type="hidden" name="Numéro_original">
+              <div class="mb-3"><label class="form-label">Date de publication</label><input type="date" name="Date de publication" class="form-control" required></div>
+              <div class="mb-3"><label class="form-label">Thème</label><input type="text" name="Thème" class="form-control" required></div>
+              <div class="mb-3"><label class="form-label">Auteur</label><input type="text" name="Auteur" class="form-control" required></div>
+              <input type="hidden" name="MAX_FILE_SIZE" value="10485760">
+              <div class="mb-3">
+                <label class="form-label">PDF (laisser vide pour conserver)</label>
+                <input type="file" name="PDF" accept="application/pdf" class="form-control">
+              </div>
+              <div id="admin-toumai-edit-msg" class="form-text"></div>
+            </div>
+            <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button><button type="submit" class="btn btn-primary">Enregistrer</button></div>
+          </form>
+        </div>
+      </div>
+    </div>`;
+
+  const articleEditModalHtml = `
+    <div class="modal fade" id="adminArticleEditModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <form id="admin-article-edit-form" enctype="multipart/form-data" class="modal-body">
+            <div class="modal-header"><h5 class="modal-title">Modifier Article</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="p-3">
+              <div class="row g-3">
+                <div class="col-md-3"><label class="form-label">Auteur</label><input type="text" name="Auteur" class="form-control" required></div>
+                <div class="col-md-4"><label class="form-label">Thème</label><input type="text" name="Thème" class="form-control" required></div>
+                <div class="col-md-2"><label class="form-label">Date de Publication</label><input type="date" name="Date de Publication" class="form-control" required></div>
+                <div class="col-md-3"><label class="form-label">Numéro</label><input type="text" name="Numéro" class="form-control" required></div>
+                <input type="hidden" name="Numéro_original">
+                <div class="col-md-3"><label class="form-label">Serie</label><input type="text" name="Serie" class="form-control" placeholder="Serie A / B / C" required></div>
+                <input type="hidden" name="MAX_FILE_SIZE" value="10485760">
+                <div class="col-12">
+                  <label class="form-label">PDF (laisser vide pour conserver)</label>
+                  <input type="file" name="PDF" class="form-control" accept="application/pdf">
+                </div>
+              </div>
+              <div id="admin-article-edit-msg" class="form-text mt-2"></div>
+            </div>
+            <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button><button type="submit" class="btn btn-primary">Enregistrer</button></div>
+          </form>
+        </div>
+      </div>
+    </div>`;
+
+  // Inject edit modals once
+  document.body.insertAdjacentHTML('beforeend', toumaiEditModalHtml);
+  document.body.insertAdjacentHTML('beforeend', articleEditModalHtml);
+
+  // Delegate action buttons
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    const action = btn.getAttribute('data-action');
+    const id = btn.getAttribute('data-id');
+
+    if (action === 'edit-toumai') {
+      const row = btn.closest('tr').children;
+      const modalEl = document.getElementById('adminToumaiEditModal');
+      const form = modalEl.querySelector('#admin-toumai-edit-form');
+      const currentNum = row[0].textContent.trim();
+      form.Numéro.value = currentNum;
+      form['Numéro_original'].value = currentNum;
+      const dp = row[1].textContent.trim();
+      if (dp) {
+        const d = new Date(dp);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth()+1).padStart(2,'0');
+        const dd = String(d.getDate()).padStart(2,'0');
+        form['Date de publication'].value = `${yyyy}-${mm}-${dd}`;
+      } else {
+        form['Date de publication'].value = '';
+      }
+      form['Thème'].value = row[2].textContent.trim();
+      form['Auteur'].value = row[3].textContent.trim();
+      new bootstrap.Modal(modalEl).show();
+    }
+
+    if (action === 'edit-article') {
+      const row = btn.closest('tr').children;
+      const modalEl = document.getElementById('adminArticleEditModal');
+      const form = modalEl.querySelector('#admin-article-edit-form');
+      // New order: Numéro (0), Date (1), Thème (2), Auteur (3)
+      const currentNum = row[0].textContent.trim();
+      form['Numéro'].value = currentNum;
+      form['Numéro_original'].value = currentNum;
+      const dp = row[1].textContent.trim();
+      if (dp) {
+        const d = new Date(dp);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth()+1).padStart(2,'0');
+        const dd = String(d.getDate()).padStart(2,'0');
+        form['Date de Publication'].value = `${yyyy}-${mm}-${dd}`;
+      } else {
+        form['Date de Publication'].value = '';
+      }
+      form['Thème'].value = row[2].textContent.trim();
+      form['Auteur'].value = row[3].textContent.trim();
+      // Serie not shown in table; keep as-is
+      new bootstrap.Modal(modalEl).show();
+    }
+
+    if (action === 'delete-toumai') {
+      if (!confirm('Supprimer cette entrée Toumai ?')) return;
+      try {
+        const fd = new FormData();
+        fd.append('Numéro', id);
+        const res = await fetch('db-connect.php?action=delete_toumai', { method: 'POST', body: fd });
+        if (!res.ok) throw new Error(await extractError(res));
+        await loadToumaiTable();
+      } catch (err) {
+        alert('Erreur suppression: ' + (err.message || err));
+      }
+    }
+
+    if (action === 'delete-article') {
+      if (!confirm('Supprimer cet article ?')) return;
+      try {
+        const fd = new FormData();
+        fd.append('Numéro', id);
+        const res = await fetch('db-connect.php?action=delete_article', { method: 'POST', body: fd });
+        if (!res.ok) throw new Error(await extractError(res));
+        await loadArticlesTable();
+      } catch (err) {
+        alert('Erreur suppression: ' + (err.message || err));
+      }
+    }
+  });
+
+  // Submit edits
+  document.getElementById('admin-toumai-edit-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    setBtnDisabled(form, true);
+    showMsg('admin-toumai-edit-msg', '');
+    try {
+      const fd = new FormData(form);
+      const res = await fetch('db-connect.php?action=update_toumai', { method: 'POST', body: fd });
+      if (!res.ok) {
+        const errTxt = await extractError(res);
+        showMsg('admin-toumai-edit-msg', 'Erreur: ' + errTxt, true);
+        return;
+      }
+      showMsg('admin-toumai-edit-msg', 'Modifications enregistrées.');
+      const modal = bootstrap.Modal.getInstance(document.getElementById('adminToumaiEditModal'));
+      if (modal) modal.hide();
+      await loadToumaiTable();
+    } catch (err) {
+      showMsg('admin-toumai-edit-msg', 'Erreur réseau: ' + (err.message || String(err)), true);
+    } finally {
+      setBtnDisabled(form, false);
+    }
+  });
+
+  document.getElementById('admin-article-edit-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    setBtnDisabled(form, true);
+    showMsg('admin-article-edit-msg', '');
+    try {
+      const fd = new FormData(form);
+      const res = await fetch('db-connect.php?action=update_article', { method: 'POST', body: fd });
+      if (!res.ok) {
+        const errTxt = await extractError(res);
+        showMsg('admin-article-edit-msg', 'Erreur: ' + errTxt, true);
+        return;
+      }
+      showMsg('admin-article-edit-msg', 'Modifications enregistrées.');
+      const modal = bootstrap.Modal.getInstance(document.getElementById('adminArticleEditModal'));
+      if (modal) modal.hide();
+      await loadArticlesTable();
+    } catch (err) {
+      showMsg('admin-article-edit-msg', 'Erreur réseau: ' + (err.message || String(err)), true);
+    } finally {
+      setBtnDisabled(form, false);
+    }
+  });
+
+  // disable / enable submit button
+  function setBtnDisabled(formEl, disabled) {
+    const btn = formEl.querySelector('button[type="submit"]');
+    if (btn) btn.disabled = disabled;
+  }
+
+  // submit Toumai
+  document.getElementById('admin-toumai-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showMsg('admin-toumai-msg', '');
+    const form = e.target;
+    setBtnDisabled(form, true);
+    try {
+      const fd = new FormData(form);
+      const res = await fetch('db-connect.php?action=insert_toumai', { method: 'POST', body: fd });
+      if (!res.ok) {
+        const errTxt = await extractError(res);
+        showMsg('admin-toumai-msg', 'Erreur: ' + errTxt, true);
+        return;
+      }
+      showMsg('admin-toumai-msg', 'Entrée Toumai ajoutée.');
+      form.reset();
+      const modalEl = document.getElementById('adminToumaiModal');
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      if (modal) modal.hide();
+      await loadToumaiTable();
+    } catch (err) {
+      console.error('admin-toumai submit', err);
+      showMsg('admin-toumai-msg', 'Erreur réseau: ' + (err.message || String(err)), true);
+    } finally {
+      setBtnDisabled(form, false);
+    }
+  });
+
+  // submit Article
+  document.getElementById('admin-article-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showMsg('admin-article-msg', '');
+    const form = e.target;
+    setBtnDisabled(form, true);
+    try {
+      const fd = new FormData(form);
+      const res = await fetch('db-connect.php?action=insert_article', { method: 'POST', body: fd });
+      if (!res.ok) {
+        const errTxt = await extractError(res);
+        showMsg('admin-article-msg', 'Erreur: ' + errTxt, true);
+        return;
+      }
+      showMsg('admin-article-msg', 'Article ajouté.');
+      form.reset();
+      const modalEl = document.getElementById('adminArticleModal');
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      if (modal) modal.hide();
+      await loadArticlesTable();
+    } catch (err) {
+      console.error('admin-article submit', err);
+      showMsg('admin-article-msg', 'Erreur réseau: ' + (err.message || String(err)), true);
+    } finally {
+      setBtnDisabled(form, false);
+    }
+  });
+
+  // wire refresh buttons
+  document.getElementById('refresh-toumai')?.addEventListener('click', loadToumaiTable);
+  document.getElementById('refresh-articles')?.addEventListener('click', loadArticlesTable);
+
+  // initial load
+  loadToumaiTable();
+  loadArticlesTable();
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    (function() {
+      const USER = 'admin';
+      const PASS = 'cnrd123';
+      const overlay = document.getElementById('auth-overlay');
+      const content = document.getElementById('admin-content');
+      const userEl = document.getElementById('auth-user');
+      const passEl = document.getElementById('auth-pass');
+      const errEl = document.getElementById('auth-error');
+      const params = new URLSearchParams(window.location.search);
+
+      function unlock() {
+        overlay.style.display = 'none';
+        content.style.display = '';
+      }
+
+      // Bypass auth when skipAuth=1 is present (used by Retour links)
+      if (params.get('skipAuth') === '1') {
+        unlock();
+        return;
+      }
+
+      function tryLogin() {
+        if (userEl.value === USER && passEl.value === PASS) {
+          errEl.style.display = 'none';
+          unlock();
+        } else {
+          errEl.style.display = 'block';
+        }
+      }
+
+      document.getElementById('auth-submit').addEventListener('click', tryLogin);
+      userEl.addEventListener('keydown', e => e.key === 'Enter' && tryLogin());
+      passEl.addEventListener('keydown', e => e.key === 'Enter' && tryLogin());
+    })();
+  </script>
+</body>
+</html>

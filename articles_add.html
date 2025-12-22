@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Admin - Ajouter Article</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Brand / Header (unchanged style) -->
+    <div class="container-fluid text-white pt-4 pb-4 d-none d-lg-flex" style="background-color: #1111ab;">
+        <div class="container pb-2">
+            <div class="d-flex align-items-center justify-content-center">
+                <a href="index.html" class="h1 mb-0" style="color: #FFD300;">CNRD</a>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid sticky-top">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white py-lg-0 px-lg-3">
+                <a href="index.html" class="navbar-brand d-lg-none"><h1 class="text-primary m-0">CNRD</h1></a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <div class="container-fluid page-header py-5 mb-5">
+        <div class="container text-center">
+            <h1 class="display-4 text-white mb-3">Ajouter</h1>
+            <p class="text-white-50 mb-0">Choisissez le formulaire à ouvrir pour ajouter des enregistrements.</p>
+        </div>
+    </div>
+
+    <!-- Main: two buttons to open forms -->
+    <div class="container py-5">
+        <div class="row justify-content-center g-4">
+            <div class="col-md-5 text-center">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                        <h5 class="card-title">Toumai</h5>
+                        <p class="card-text text-center">Ajouter un enregistrement Toumai (date, contenu, PDF).</p>
+                        <button class="btn btn-lg btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#toumaiModal">Ajouter Toumai</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5 text-center">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                        <h5 class="card-title">Article</h5>
+                        <p class="card-text text-center">Ajouter un article (auteur, titre, date, contenu, index, PDF).</p>
+                        <button class="btn btn-lg btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#articleModal">Ajouter Article</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="news.html" class="btn btn-outline-secondary">Retour Publications</a>
+            <a href="admin.html" class="btn btn-link">Page Admin (tous les ajouts)</a>
+        </div>
+    </div>
+
+    <!-- Toumai Modal -->
+    <div class="modal fade" id="toumaiModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form id="toumai-form" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ajouter Toumai</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Publisher Date</label>
+                            <input type="date" name="publisher_date" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Content</label>
+                            <input type="text" name="content" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">PDF</label>
+                            <input type="file" name="pdf" class="form-control" accept="application/pdf" required>
+                        </div>
+                        <div id="toumai-form-msg" class="form-text"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Ajouter Toumai</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Article Modal -->
+    <div class="modal fade" id="articleModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <form id="article-form" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ajouter Article</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Author</label>
+                                <input type="text" name="author" class="form-control" required>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label">Article (titre)</label>
+                                <input type="text" name="article" class="form-control" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Publisher Date</label>
+                                <input type="date" name="publisher_date" class="form-control" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Content</label>
+                                <textarea name="content" class="form-control" rows="3" required></textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Index</label>
+                                <input type="text" name="index" class="form-control">
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label">PDF</label>
+                                <input type="file" name="pdf" class="form-control" accept="application/pdf" required>
+                            </div>
+                        </div>
+                        <div id="article-form-msg" class="form-text mt-2"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Ajouter Article</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Article Form -->
+    <div class="container py-5">
+        <h3 class="mb-4">Ajouter un Article</h3>
+        <form id="articleForm" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Auteur</label>
+                <input name="Auteur" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Date de Publication</label>
+                <input name="Date de Publication" type="date" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Numéro</label>
+                <input name="Numéro" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Thème</label>
+                <input name="Thème" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Serie</label>
+                <input name="Serie" class="form-control" placeholder="Serie A / B / C" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">PDF (URL ou chemin)</label>
+                <input name="PDF" class="form-control" placeholder="/pdf/article-001.pdf" required>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">Enregistrer</button>
+                <span id="articleMsg" class="ms-3"></span>
+            </div>
+        </form>
+        <hr class="my-4">
+        <h5>Derniers articles</h5>
+        <pre id="articleList" class="bg-light p-3"></pre>
+    </div>
+
+    <!-- Footer (unchanged style) -->
+    <div class="container-fluid footer position-relative bg-dark text-white-50 py-5">
+        <div class="container">
+            <div class="row g-5 py-5">
+                <div class="col-lg-6 pe-lg-5">
+                    <a href="index.html" class="navbar-brand"><h1 class="h1 mb-0" style="color: #FFD300;">CNRD</h1></a>
+                    <p class="fs-5 mb-4">« Le CNRD stimule la recherche et l’innovation pour favoriser la science et la technologie au service du développement durable du Tchad. »</p>
+                </div>
+                <div class="col-lg-6 ps-lg-5"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function showMsg(id, text, isError) {
+            const el = document.getElementById(id);
+            el.textContent = text || '';
+            el.classList.toggle('text-danger', !!isError);
+            el.classList.toggle('text-success', !isError && !!text);
+        }
+
+        // Toumai form
+        document.getElementById('toumai-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showMsg('toumai-form-msg', '');
+            const fd = new FormData(e.target);
+            try {
+                const res = await fetch('/api/toumai', { method: 'POST', body: fd });
+                if (!res.ok) {
+                    const txt = await res.text().catch(()=>null);
+                    throw new Error(txt || 'Erreur API');
+                }
+                showMsg('toumai-form-msg', 'Toumai ajouté.');
+                e.target.reset();
+                const modalEl = document.getElementById('toumaiModal');
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+            } catch (err) {
+                showMsg('toumai-form-msg', 'Erreur lors de l\'ajout.', true);
+                console.error(err);
+            }
+        });
+
+        // Article form
+        document.getElementById('article-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showMsg('article-form-msg', '');
+            const fd = new FormData(e.target);
+            try {
+                const res = await fetch('/api/articles', { method: 'POST', body: fd });
+                if (!res.ok) {
+                    const txt = await res.text().catch(()=>null);
+                    throw new Error(txt || 'Erreur API');
+                }
+                showMsg('article-form-msg', 'Article ajouté.');
+                e.target.reset();
+                const modalEl = document.getElementById('articleModal');
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+            } catch (err) {
+                showMsg('article-form-msg', 'Erreur lors de l\'ajout.', true);
+                console.error(err);
+            }
+        });
+
+        $(function(){
+            function refreshList(){
+                $.get('db-connect.php?action=list_articles').done(function(d){
+                    $('#articleList').text(JSON.stringify(d, null, 2));
+                });
+            }
+            refreshList();
+
+            $('#articleForm').on('submit', function(e){
+                e.preventDefault();
+                const data = $(this).serialize();
+                $.post('db-connect.php?action=insert_article', data)
+                 .done(function(res){
+                    $('#articleMsg').text('Ajouté: ID ' + res.id).removeClass('text-danger').addClass('text-success');
+                    refreshList();
+                 }).fail(function(xhr){
+                    const err = xhr.responseJSON?.error || 'Erreur';
+                    $('#articleMsg').text(err).removeClass('text-success').addClass('text-danger');
+                 });
+            });
+        });
+    </script>
+</body>
+</html>
