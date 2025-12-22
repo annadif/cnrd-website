@@ -804,6 +804,29 @@
     .page-header p {
         font-size: 0.9rem;
     }
+    
+    /* About section circular stats */
+    .about-fact {
+        width: 140px !important;
+        height: 140px !important;
+        margin: 0 auto !important;
+    }
+    
+    .about-fact.mt-n130 {
+        margin-top: 1rem !important;
+    }
+    
+    .about-fact p {
+        font-size: 0.85rem !important;
+    }
+    
+    .about-fact h1 {
+        font-size: 2rem !important;
+    }
+    
+    .row.g-4.g-sm-5 {
+        gap: 1rem !important;
+    }
 }
 
 /* Responsive Container */
