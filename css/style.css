@@ -1163,6 +1163,109 @@
     .back-to-top { width: 2.75rem !important; height: 2.75rem !important; bottom: 0.9rem !important; right: 0.9rem !important; }
 }
 
+/*** Actualités ***/
+.news-card {
+    border: none;
+    box-shadow: 0 0 30px rgba(0, 0, 0, .07);
+    transition: .35s;
+    height: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.news-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 45px rgba(0, 0, 0, .13);
+}
+
+.news-card .card-img-top {
+    height: 210px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.news-card .news-img-placeholder {
+    height: 210px;
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #adb5bd;
+    font-size: 3rem;
+}
+
+.news-card .card-body {
+    padding: 1.4rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.news-card .news-meta {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .65rem;
+    flex-wrap: wrap;
+}
+
+.news-card .news-date {
+    font-size: .82rem;
+    color: #6c757d;
+}
+
+.news-card .card-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.35;
+    margin-bottom: .6rem;
+    flex-grow: 0;
+}
+
+.news-card .card-text {
+    font-size: .93rem;
+    color: #444;
+    flex: 1;
+    line-height: 1.55;
+}
+
+.news-card .card-footer-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+    padding-top: .75rem;
+    border-top: 1px solid rgba(0,0,0,.06);
+}
+
+.container-actualites {
+    position: relative;
+}
+
+.news-empty-state {
+    text-align: center;
+    padding: 3.5rem 1rem;
+    color: #adb5bd;
+}
+
+.news-empty-state i {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.news-empty-state p {
+    font-size: 1.05rem;
+    margin-bottom: 0;
+}
+
+@media (max-width: 576px) {
+    .news-card .card-img-top,
+    .news-card .news-img-placeholder {
+        height: 180px;
+    }
+    .news-card .card-body { padding: 1.1rem 1.2rem; }
+}
+
 /* Ensure containers have breathing room on small screens */
 @media (max-width: 576px) {
     .container { padding-left: 0.9rem; padding-right: 0.9rem; }
