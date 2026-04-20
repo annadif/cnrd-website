@@ -435,7 +435,7 @@
                 <!-- Actions -->
                 <div class="text-center mt-5 d-flex flex-wrap justify-content-center gap-3">
                     <a href="actualites_add.html" class="btn btn-primary px-4 py-2 wow fadeInUp" data-wow-delay="0.2s">
-                        <i class="bi bi-plus-circle me-2"></i>Ajouter une actualité
+                        <i class="bi bi-newspaper me-2"></i>Voir toutes les actualités
                     </a>
                 </div>
             </div>
@@ -922,8 +922,24 @@
         (function () {
             'use strict';
 
-            var LS_KEY = 'cnrd_actualites';
             var MAX_DISPLAY = 6;
+            var NEWS_IMAGE_FILES = [
+                'WhatsApp Image 2026-04-20 at 18.19.36.jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.37.jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.37(1).jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.38.jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.38(1).jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.38(2).jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.39.jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.39(1).jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.40.jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.41.jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.41(1).jpeg'
+            ];
+
+            function newsImagePath(fileName) {
+                return 'News/' + encodeURIComponent(fileName);
+            }
 
             /* ------------------------------------------------------------------ */
             /* SEEDED NEWS — hardcoded articles with real images from img/ folder  */
@@ -935,20 +951,8 @@
                     titre: 'Atelier de restitution des résultats du Projet IMPACTEE au CNRD',
                     categorie: 'Événement',
                     date: '2026-04-20',
-                    image: 'img/impactee-03.jpg',
-                    images: [
-                        'img/impactee-03.jpg',
-                        'img/impactee-05.jpg',
-                        'img/impactee-01.jpg',
-                        'img/impactee-02.jpg',
-                        'img/impactee-04.jpg',
-                        'img/impactee-06.jpg',
-                        'img/impactee-07.jpg',
-                        'img/impactee-08.jpg',
-                        'img/impactee-09.jpg',
-                        'img/impactee-10.jpg',
-                        'img/impactee-11.jpg'
-                    ],
+                    image: newsImagePath('WhatsApp Image 2026-04-20 at 18.19.36.jpeg'),
+                    images: NEWS_IMAGE_FILES.map(newsImagePath),
                     resume: 'Le CNRD a accueilli les 20 et 21 avril 2026 l\'atelier de restitution des résultats du Projet IMPACTEE, portant sur les impacts de l\'élevage transhumant sur les ressources naturelles du Parc National de Zakouma (Tchad).',
                     contenu: 'Le Centre National de Recherche pour le Développement (CNRD) a accueilli, les 20 et 21 avril 2026, l\'atelier de restitution des résultats du Projet IMPACTEE (Impacts de l\'élevage transhumant sur l\'occupation des sols, les ressources naturelles et les habitats du Parc National de Zakouma et des aires protégées adjacentes – Tchad).\n\nCet atelier, organisé en partenariat avec l\'Institut de Recherche pour le Développement (IRD), a réuni des chercheurs, experts, représentants institutionnels et acteurs du développement afin de présenter et discuter les principaux résultats de cette étude d\'envergure nationale.\n\nLes travaux ont mis en lumière les interactions entre les pratiques d\'élevage transhumant et la conservation des écosystèmes fragiles du Parc National de Zakouma, l\'une des zones protégées les plus importantes du Tchad et de l\'Afrique centrale.\n\nLes participants ont échangé sur les enjeux de gestion durable des ressources naturelles, de coexistence entre conservation de la biodiversité et activités pastorales, ainsi que sur les perspectives de politique environnementale pour les aires protégées adjacentes.\n\nCet événement s\'inscrit dans la mission du CNRD de promouvoir la recherche scientifique appliquée au service du développement durable du Tchad.'
                 }
@@ -956,18 +960,9 @@
 
             /* ------------------------------------------------------------------ */
 
-            function getUserNews() {
-                try {
-                    return JSON.parse(localStorage.getItem(LS_KEY)) || [];
-                } catch (e) {
-                    return [];
-                }
-            }
-
-            /** Merge seeded + user news, sorted most recent first */
+            /** Seeded news only, sorted most recent first */
             function getAllNews() {
-                var user = getUserNews();
-                var all = SEED_NEWS.concat(user);
+                var all = SEED_NEWS.slice();
                 all.sort(function (a, b) {
                     return (b.date || '').localeCompare(a.date || '');
                 });
@@ -1012,11 +1007,6 @@
                 var imgHtml = '<div class="card-img-wrapper">' + imgInner + galleryBadge + '</div>';
                 var badgeClass = 'bg-' + badgeColor(item.categorie);
 
-                var deleteBtn = item.seeded
-                    ? ''
-                    : '<button class="btn btn-outline-danger btn-sm" title="Supprimer" onclick="deleteNews(\'' + escHtml(item.id) + '\')">' +
-                      '<i class="bi bi-trash"></i></button>';
-
                 return '<div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="' + (0.1 + index * 0.1).toFixed(1) + 's">' +
                     '<div class="card news-card">' +
                     imgHtml +
@@ -1031,7 +1021,6 @@
                     '<button class="btn btn-primary btn-sm px-3" onclick="openNewsModal(\'' + escHtml(item.id) + '\')">' +
                     'Lire la suite <i class="bi bi-chevron-right ms-1"></i>' +
                     '</button>' +
-                    deleteBtn +
                     '</div>' +
                     '</div>' +
                     '</div>' +
@@ -1109,13 +1098,6 @@
 
                 var modal = new bootstrap.Modal(document.getElementById('newsDetailModal'));
                 modal.show();
-            };
-
-            window.deleteNews = function (id) {
-                if (!confirm('Supprimer cette actualité ?')) return;
-                var news = getUserNews().filter(function (n) { return n.id !== id; });
-                localStorage.setItem(LS_KEY, JSON.stringify(news));
-                renderNews();
             };
 
             document.addEventListener('DOMContentLoaded', renderNews);

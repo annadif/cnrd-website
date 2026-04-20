@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Ajouter une Actualité — CNRD</title>
+    <title>Actualités — CNRD</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <!-- Google Web Fonts -->
@@ -22,47 +22,44 @@
     <link href="css/style.css" rel="stylesheet">
 
     <style>
-        #image-preview-box {
-            width: 100%;
-            height: 220px;
-            border: 2px dashed #dee2e6;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f8f9fa;
+        .news-hero {
+            background: linear-gradient(135deg, #f8f9ff 0%, #edf2ff 100%);
+            border: 1px solid #e7ebff;
+            border-radius: 14px;
+            padding: 2rem;
+        }
+        .news-gallery-card {
+            border: 0;
+            border-radius: 12px;
             overflow: hidden;
-            transition: .3s;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
             cursor: pointer;
+            transition: transform .25s ease, box-shadow .25s ease;
         }
-        #image-preview-box:hover {
-            border-color: var(--bs-primary);
-            background: #eef0ff;
+        .news-gallery-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, .13);
         }
-        #image-preview-box img {
+        .news-gallery-card img {
             width: 100%;
-            height: 100%;
+            height: 250px;
             object-fit: cover;
             object-position: center;
-            display: none;
-        }
-        #image-preview-placeholder {
-            text-align: center;
-            color: #adb5bd;
-        }
-        #image-preview-placeholder i {
-            font-size: 2.5rem;
             display: block;
-            margin-bottom: .5rem;
         }
-        .form-section-card {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(0,0,0,.07);
-            padding: 2rem 2.5rem;
+        .gallery-modal-img {
+            width: 100%;
+            max-height: 76vh;
+            object-fit: contain;
+            background: #000;
         }
         @media (max-width: 576px) {
-            .form-section-card { padding: 1.25rem 1rem; }
+            .news-hero {
+                padding: 1.25rem;
+            }
+            .news-gallery-card img {
+                height: 200px;
+            }
         }
     </style>
 </head>
@@ -107,104 +104,51 @@
     <!-- Page Header Start -->
     <div class="container-fluid page-header py-5 mb-5">
         <div class="container text-center">
-            <h1 class="display-4 text-white mb-2">Ajouter une Actualité</h1>
-            <p class="text-white-50 mb-0">Renseignez les informations de la nouvelle actualité du CNRD.</p>
+            <h1 class="display-4 text-white mb-2">Actualités du CNRD</h1>
+            <p class="text-white-50 mb-0">Page d'information publique et consultation des dernières activités.</p>
         </div>
     </div>
     <!-- Page Header End -->
 
-    <!-- Form Start -->
+    <!-- News Content Start -->
     <div class="container pb-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-9 col-xl-8">
+        <div class="news-hero mb-5">
+            <div class="d-flex align-items-center gap-3 flex-wrap mb-3">
+                <span class="badge bg-warning text-dark">Événement</span>
+                <span class="text-muted"><i class="bi bi-calendar3 me-1"></i>20 avril 2026</span>
+            </div>
+            <h2 class="h1 mb-3">Atelier de restitution des résultats du Projet IMPACTEE au CNRD</h2>
+            <p class="mb-0" style="line-height: 1.8;">
+                Le Centre National de Recherche pour le Développement (CNRD) a accueilli les 20 et 21 avril 2026
+                l'atelier de restitution des résultats du Projet IMPACTEE, en partenariat avec l'IRD. Les échanges
+                ont porté sur les impacts de l'élevage transhumant sur les ressources naturelles et les habitats du
+                Parc National de Zakouma, avec un focus sur la conservation et la gestion durable.
+            </p>
+        </div>
 
-                <!-- Alert zone -->
-                <div id="form-alert" class="d-none mb-4"></div>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <h3 class="mb-0">Galerie Photos</h3>
+            <span class="text-muted" id="news-photo-count"></span>
+        </div>
+        <div class="row g-4" id="news-gallery-grid"></div>
+    </div>
+    <!-- News Content End -->
 
-                <div class="form-section-card">
-                    <form id="news-form" novalidate>
-
-                        <!-- Titre -->
-                        <div class="mb-4">
-                            <label for="news-titre" class="form-label fw-medium">Titre de l'actualité <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-lg" id="news-titre" placeholder="Ex : Atelier national sur l'IA au Tchad" required maxlength="200">
-                            <div class="invalid-feedback">Le titre est obligatoire.</div>
-                        </div>
-
-                        <!-- Catégorie + Date -->
-                        <div class="row g-3 mb-4">
-                            <div class="col-sm-6">
-                                <label for="news-categorie" class="form-label fw-medium">Catégorie <span class="text-danger">*</span></label>
-                                <select class="form-select" id="news-categorie" required>
-                                    <option value="" disabled selected>Choisir une catégorie</option>
-                                    <option value="Recherche">Recherche</option>
-                                    <option value="Innovation">Innovation</option>
-                                    <option value="Événement">Événement</option>
-                                    <option value="Formation">Formation</option>
-                                    <option value="Publication">Publication</option>
-                                </select>
-                                <div class="invalid-feedback">Veuillez choisir une catégorie.</div>
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="news-date" class="form-label fw-medium">Date de publication <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="news-date" required>
-                                <div class="invalid-feedback">La date est obligatoire.</div>
-                            </div>
-                        </div>
-
-                        <!-- Image -->
-                        <div class="mb-4">
-                            <label class="form-label fw-medium">Image</label>
-                            <div id="image-preview-box" onclick="document.getElementById('news-image').click()">
-                                <img id="image-preview" src="" alt="Aperçu">
-                                <div id="image-preview-placeholder">
-                                    <i class="bi bi-cloud-upload"></i>
-                                    <span class="d-block small">Cliquez pour choisir une image</span>
-                                    <span class="d-block text-muted" style="font-size:.78rem;">JPG, PNG, WEBP — recommandé &lt; 2 Mo</span>
-                                </div>
-                            </div>
-                            <input type="file" id="news-image" accept="image/*" class="d-none">
-                            <button type="button" id="remove-image-btn" class="btn btn-sm btn-outline-danger mt-2 d-none" onclick="removeImage()">
-                                <i class="bi bi-x-circle me-1"></i>Supprimer l'image
-                            </button>
-                        </div>
-
-                        <!-- Résumé -->
-                        <div class="mb-4">
-                            <label for="news-resume" class="form-label fw-medium">Résumé (court) <span class="text-danger">*</span></label>
-                            <textarea class="form-control" id="news-resume" rows="3" maxlength="300"
-                                placeholder="Une description courte visible dans la carte d'actualité…" required></textarea>
-                            <div class="d-flex justify-content-between mt-1">
-                                <div class="invalid-feedback d-block" id="resume-error" style="visibility:hidden;">Le résumé est obligatoire.</div>
-                                <small class="text-muted ms-auto" id="resume-counter">0 / 300</small>
-                            </div>
-                        </div>
-
-                        <!-- Contenu -->
-                        <div class="mb-4">
-                            <label for="news-contenu" class="form-label fw-medium">Contenu complet <span class="text-danger">*</span></label>
-                            <textarea class="form-control" id="news-contenu" rows="8"
-                                placeholder="Rédigez le contenu détaillé de l'actualité ici…" required></textarea>
-                            <div class="invalid-feedback">Le contenu est obligatoire.</div>
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="d-flex flex-wrap gap-3 justify-content-end pt-2">
-                            <a href="index.html#actualites" class="btn btn-outline-secondary px-4">
-                                <i class="bi bi-arrow-left me-2"></i>Annuler
-                            </a>
-                            <button type="submit" class="btn btn-primary px-5" id="submit-btn">
-                                <i class="bi bi-check-circle me-2"></i>Enregistrer
-                            </button>
-                        </div>
-
-                    </form>
+    <!-- Gallery Modal Start -->
+    <div class="modal fade" id="newsPhotoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title" id="news-photo-title">Photo actualité</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
-
+                <div class="modal-body pt-2">
+                    <img id="news-photo-preview" class="gallery-modal-img rounded" src="" alt="Photo actualité">
+                </div>
             </div>
         </div>
     </div>
-    <!-- Form End -->
+    <!-- Gallery Modal End -->
 
 
     <!-- Footer Start -->
@@ -263,152 +207,58 @@
         (function () {
             'use strict';
 
-            var LS_KEY = 'cnrd_actualites';
-            var imageBase64 = '';
+            var NEWS_IMAGE_FILES = [
+                'WhatsApp Image 2026-04-20 at 18.19.36.jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.37.jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.37(1).jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.38.jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.38(1).jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.38(2).jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.39.jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.39(1).jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.40.jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.41.jpeg',
+                'WhatsApp Image 2026-04-20 at 18.19.41(1).jpeg'
+            ];
 
-            /* ---- Sticky navbar ---- */
-            window.addEventListener('scroll', function () {
-                var nav = document.querySelector('.sticky-top');
-                if (!nav) return;
-                if (window.scrollY > 300) {
-                    nav.classList.add('bg-white', 'shadow-sm');
-                    nav.style.top = '-1px';
-                } else {
-                    nav.classList.remove('bg-white', 'shadow-sm');
-                    nav.style.top = '-100px';
-                }
-            });
+            function photoPath(fileName) {
+                return 'News/' + encodeURIComponent(fileName);
+            }
 
-            /* ---- Back to top ---- */
-            var backBtn = document.querySelector('.back-to-top');
-            window.addEventListener('scroll', function () {
-                if (!backBtn) return;
-                backBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
-            });
-            if (backBtn) {
-                backBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+            function escHtml(str) {
+                return String(str || '').replace(/[&<>"']/g, function (c) {
+                    return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
                 });
             }
 
-            /* ---- Set today as default date ---- */
-            var dateInput = document.getElementById('news-date');
-            if (dateInput) {
-                dateInput.value = new Date().toISOString().split('T')[0];
+            function renderGallery() {
+                var grid = document.getElementById('news-gallery-grid');
+                var count = document.getElementById('news-photo-count');
+                if (!grid) return;
+
+                count.textContent = NEWS_IMAGE_FILES.length + ' photos';
+                grid.innerHTML = NEWS_IMAGE_FILES.map(function (fileName, i) {
+                    var src = photoPath(fileName);
+                    var label = 'Photo ' + (i + 1);
+                    return '<div class="col-sm-6 col-lg-4">' +
+                        '<div class="news-gallery-card" onclick="openNewsPhoto(\'' + escHtml(src) + '\', \'' + escHtml(label) + '\')">' +
+                        '<img src="' + escHtml(src) + '" alt="' + escHtml(label) + '" loading="lazy">' +
+                        '</div>' +
+                        '</div>';
+                }).join('');
             }
 
-            /* ---- Resume character counter ---- */
-            var resumeTA = document.getElementById('news-resume');
-            var resumeCounter = document.getElementById('resume-counter');
-            if (resumeTA && resumeCounter) {
-                resumeTA.addEventListener('input', function () {
-                    resumeCounter.textContent = resumeTA.value.length + ' / 300';
-                });
-            }
-
-            /* ---- Image handling ---- */
-            var imageInput = document.getElementById('news-image');
-            var imagePreview = document.getElementById('image-preview');
-            var imagePlaceholder = document.getElementById('image-preview-placeholder');
-            var removeBtn = document.getElementById('remove-image-btn');
-
-            if (imageInput) {
-                imageInput.addEventListener('change', function () {
-                    var file = imageInput.files[0];
-                    if (!file) return;
-
-                    if (file.size > 3 * 1024 * 1024) {
-                        showAlert('L\'image est trop grande (max 3 Mo recommandé). Veuillez choisir une image plus petite.', 'warning');
-                        imageInput.value = '';
-                        return;
-                    }
-
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        imageBase64 = e.target.result;
-                        imagePreview.src = imageBase64;
-                        imagePreview.style.display = 'block';
-                        imagePlaceholder.style.display = 'none';
-                        removeBtn.classList.remove('d-none');
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-
-            window.removeImage = function () {
-                imageBase64 = '';
-                imageInput.value = '';
-                imagePreview.src = '';
-                imagePreview.style.display = 'none';
-                imagePlaceholder.style.display = 'block';
-                removeBtn.classList.add('d-none');
+            window.openNewsPhoto = function (src, label) {
+                var img = document.getElementById('news-photo-preview');
+                var title = document.getElementById('news-photo-title');
+                img.src = src;
+                img.alt = label;
+                title.textContent = label;
+                var modal = new bootstrap.Modal(document.getElementById('newsPhotoModal'));
+                modal.show();
             };
 
-            /* ---- Alert helper ---- */
-            function showAlert(msg, type) {
-                var alertBox = document.getElementById('form-alert');
-                alertBox.className = 'alert alert-' + (type || 'danger') + ' mb-4';
-                alertBox.textContent = msg;
-                alertBox.classList.remove('d-none');
-                alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-
-            function hideAlert() {
-                var alertBox = document.getElementById('form-alert');
-                alertBox.classList.add('d-none');
-            }
-
-            /* ---- Form submit ---- */
-            var form = document.getElementById('news-form');
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                hideAlert();
-
-                // Bootstrap validation
-                form.classList.add('was-validated');
-                if (!form.checkValidity()) {
-                    showAlert('Veuillez remplir tous les champs obligatoires.', 'danger');
-                    return;
-                }
-
-                var titre = document.getElementById('news-titre').value.trim();
-                var categorie = document.getElementById('news-categorie').value;
-                var date = document.getElementById('news-date').value;
-                var resume = resumeTA.value.trim();
-                var contenu = document.getElementById('news-contenu').value.trim();
-
-                var newItem = {
-                    id: Date.now().toString(),
-                    titre: titre,
-                    categorie: categorie,
-                    date: date,
-                    image: imageBase64,
-                    resume: resume,
-                    contenu: contenu
-                };
-
-                try {
-                    var existing = [];
-                    try { existing = JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch (err) { existing = []; }
-                    existing.push(newItem);
-                    localStorage.setItem(LS_KEY, JSON.stringify(existing));
-                } catch (storageErr) {
-                    showAlert('Erreur lors de la sauvegarde. L\'image est peut-être trop grande. Réessayez sans image ou avec une image plus petite.', 'danger');
-                    return;
-                }
-
-                // Success — redirect
-                showAlert('Actualité ajoutée avec succès !', 'success');
-                var submitBtn = document.getElementById('submit-btn');
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Enregistré !';
-
-                setTimeout(function () {
-                    window.location.href = 'index.html#actualites';
-                }, 1200);
-            });
-
+            document.addEventListener('DOMContentLoaded', renderGallery);
         })();
     </script>
 </body>
