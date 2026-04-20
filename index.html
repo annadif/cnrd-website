@@ -450,13 +450,30 @@
             <div class="modal-content">
                 <div class="modal-header border-0 pb-0">
                     <div class="d-flex flex-column w-100">
-                        <div class="d-flex align-items-center gap-2 mb-1" id="news-modal-meta"></div>
+                        <div class="d-flex align-items-center gap-2 mb-1 flex-wrap" id="news-modal-meta"></div>
                         <h5 class="modal-title fw-bold" id="newsDetailModalLabel"></h5>
                     </div>
                     <button type="button" class="btn-close ms-2 flex-shrink-0" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
                 <div class="modal-body pt-2">
+                    <!-- Single image (user-added) -->
                     <img id="news-modal-img" src="" alt="" class="img-fluid rounded mb-4 w-100 d-none" style="max-height:340px; object-fit:cover; object-position:center;">
+                    <!-- Gallery carousel (seeded articles with multiple images) -->
+                    <div id="news-modal-gallery" class="d-none mb-4">
+                        <div id="news-gallery-carousel" class="carousel slide rounded overflow-hidden" data-bs-ride="carousel">
+                            <div class="carousel-indicators" id="gallery-indicators"></div>
+                            <div class="carousel-inner" id="gallery-slides"></div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#news-gallery-carousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Précédent</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#news-gallery-carousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Suivant</span>
+                            </button>
+                        </div>
+                        <p class="text-muted text-end mt-1 mb-0" id="gallery-count" style="font-size:.82rem;"></p>
+                    </div>
                     <div id="news-modal-content" style="white-space: pre-line; line-height: 1.7;"></div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
@@ -908,12 +925,53 @@
             var LS_KEY = 'cnrd_actualites';
             var MAX_DISPLAY = 6;
 
-            function getNews() {
+            /* ------------------------------------------------------------------ */
+            /* SEEDED NEWS — hardcoded articles with real images from img/ folder  */
+            /* ------------------------------------------------------------------ */
+            var SEED_NEWS = [
+                {
+                    id: 'seed-impactee-2026',
+                    seeded: true,
+                    titre: 'Atelier de restitution des résultats du Projet IMPACTEE au CNRD',
+                    categorie: 'Événement',
+                    date: '2026-04-20',
+                    image: 'img/impactee-03.jpg',
+                    images: [
+                        'img/impactee-03.jpg',
+                        'img/impactee-05.jpg',
+                        'img/impactee-01.jpg',
+                        'img/impactee-02.jpg',
+                        'img/impactee-04.jpg',
+                        'img/impactee-06.jpg',
+                        'img/impactee-07.jpg',
+                        'img/impactee-08.jpg',
+                        'img/impactee-09.jpg',
+                        'img/impactee-10.jpg',
+                        'img/impactee-11.jpg'
+                    ],
+                    resume: 'Le CNRD a accueilli les 20 et 21 avril 2026 l\'atelier de restitution des résultats du Projet IMPACTEE, portant sur les impacts de l\'élevage transhumant sur les ressources naturelles du Parc National de Zakouma (Tchad).',
+                    contenu: 'Le Centre National de Recherche pour le Développement (CNRD) a accueilli, les 20 et 21 avril 2026, l\'atelier de restitution des résultats du Projet IMPACTEE (Impacts de l\'élevage transhumant sur l\'occupation des sols, les ressources naturelles et les habitats du Parc National de Zakouma et des aires protégées adjacentes – Tchad).\n\nCet atelier, organisé en partenariat avec l\'Institut de Recherche pour le Développement (IRD), a réuni des chercheurs, experts, représentants institutionnels et acteurs du développement afin de présenter et discuter les principaux résultats de cette étude d\'envergure nationale.\n\nLes travaux ont mis en lumière les interactions entre les pratiques d\'élevage transhumant et la conservation des écosystèmes fragiles du Parc National de Zakouma, l\'une des zones protégées les plus importantes du Tchad et de l\'Afrique centrale.\n\nLes participants ont échangé sur les enjeux de gestion durable des ressources naturelles, de coexistence entre conservation de la biodiversité et activités pastorales, ainsi que sur les perspectives de politique environnementale pour les aires protégées adjacentes.\n\nCet événement s\'inscrit dans la mission du CNRD de promouvoir la recherche scientifique appliquée au service du développement durable du Tchad.'
+                }
+            ];
+
+            /* ------------------------------------------------------------------ */
+
+            function getUserNews() {
                 try {
                     return JSON.parse(localStorage.getItem(LS_KEY)) || [];
                 } catch (e) {
                     return [];
                 }
+            }
+
+            /** Merge seeded + user news, sorted most recent first */
+            function getAllNews() {
+                var user = getUserNews();
+                var all = SEED_NEWS.concat(user);
+                all.sort(function (a, b) {
+                    return (b.date || '').localeCompare(a.date || '');
+                });
+                return all;
             }
 
             function formatDate(iso) {
@@ -940,11 +998,24 @@
             }
 
             function renderCard(item, index) {
-                var imgHtml = item.image
-                    ? '<img src="' + escHtml(item.image) + '" class="card-img-top" alt="' + escHtml(item.titre) + '">'
+                var hasGallery = item.seeded && item.images && item.images.length > 1;
+                var coverImg = item.image || (item.images && item.images[0]) || '';
+
+                var imgInner = coverImg
+                    ? '<img src="' + escHtml(coverImg) + '" class="card-img-top" alt="' + escHtml(item.titre) + '" loading="lazy">'
                     : '<div class="news-img-placeholder"><i class="bi bi-image"></i></div>';
 
+                var galleryBadge = hasGallery
+                    ? '<span class="gallery-badge"><i class="bi bi-images me-1"></i>' + item.images.length + ' photos</span>'
+                    : '';
+
+                var imgHtml = '<div class="card-img-wrapper">' + imgInner + galleryBadge + '</div>';
                 var badgeClass = 'bg-' + badgeColor(item.categorie);
+
+                var deleteBtn = item.seeded
+                    ? ''
+                    : '<button class="btn btn-outline-danger btn-sm" title="Supprimer" onclick="deleteNews(\'' + escHtml(item.id) + '\')">' +
+                      '<i class="bi bi-trash"></i></button>';
 
                 return '<div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="' + (0.1 + index * 0.1).toFixed(1) + 's">' +
                     '<div class="card news-card">' +
@@ -960,9 +1031,7 @@
                     '<button class="btn btn-primary btn-sm px-3" onclick="openNewsModal(\'' + escHtml(item.id) + '\')">' +
                     'Lire la suite <i class="bi bi-chevron-right ms-1"></i>' +
                     '</button>' +
-                    '<button class="btn btn-outline-danger btn-sm" title="Supprimer" onclick="deleteNews(\'' + escHtml(item.id) + '\')">' +
-                    '<i class="bi bi-trash"></i>' +
-                    '</button>' +
+                    deleteBtn +
                     '</div>' +
                     '</div>' +
                     '</div>' +
@@ -970,13 +1039,12 @@
             }
 
             function renderNews() {
-                var news = getNews();
+                var all = getAllNews();
                 var grid = document.getElementById('news-grid');
                 var empty = document.getElementById('news-empty');
                 if (!grid) return;
 
-                // Show latest MAX_DISPLAY items (most recent first)
-                var items = news.slice().reverse().slice(0, MAX_DISPLAY);
+                var items = all.slice(0, MAX_DISPLAY);
 
                 if (items.length === 0) {
                     grid.innerHTML = '';
@@ -986,32 +1054,55 @@
                     grid.innerHTML = items.map(function (item, i) {
                         return renderCard(item, i);
                     }).join('');
-                    // Re-init WOW animations for newly added elements
-                    if (typeof WOW !== 'undefined') {
-                        new WOW().init();
-                    }
+                    if (typeof WOW !== 'undefined') { new WOW().init(); }
                 }
             }
 
             window.openNewsModal = function (id) {
-                var news = getNews();
-                var item = news.find(function (n) { return n.id === id; });
+                var all = getAllNews();
+                var item = all.find(function (n) { return n.id === id; });
                 if (!item) return;
 
                 document.getElementById('newsDetailModalLabel').textContent = item.titre;
 
-                var meta = document.getElementById('news-modal-meta');
                 var badgeClass = 'bg-' + badgeColor(item.categorie);
-                meta.innerHTML = (item.categorie ? '<span class="badge ' + badgeClass + ' text-white">' + escHtml(item.categorie) + '</span>' : '') +
+                document.getElementById('news-modal-meta').innerHTML =
+                    (item.categorie ? '<span class="badge ' + badgeClass + ' text-white">' + escHtml(item.categorie) + '</span>' : '') +
                     '<small class="text-muted"><i class="bi bi-calendar3 me-1"></i>' + escHtml(formatDate(item.date)) + '</small>';
 
-                var img = document.getElementById('news-modal-img');
-                if (item.image) {
-                    img.src = item.image;
-                    img.alt = item.titre;
-                    img.classList.remove('d-none');
-                } else {
-                    img.classList.add('d-none');
+                var singleImg = document.getElementById('news-modal-img');
+                var galleryWrap = document.getElementById('news-modal-gallery');
+                var slidesEl = document.getElementById('gallery-slides');
+                var indicatorsEl = document.getElementById('gallery-indicators');
+                var countEl = document.getElementById('gallery-count');
+
+                /* Reset both */
+                singleImg.classList.add('d-none');
+                galleryWrap.classList.add('d-none');
+
+                if (item.seeded && item.images && item.images.length > 0) {
+                    /* Build carousel */
+                    slidesEl.innerHTML = item.images.map(function (src, i) {
+                        return '<div class="carousel-item' + (i === 0 ? ' active' : '') + '">' +
+                            '<img src="' + escHtml(src) + '" alt="Photo ' + (i + 1) + ' — ' + escHtml(item.titre) + '" loading="lazy">' +
+                            '</div>';
+                    }).join('');
+                    indicatorsEl.innerHTML = item.images.map(function (_, i) {
+                        return '<button type="button" data-bs-target="#news-gallery-carousel" data-bs-slide-to="' + i + '"' +
+                            (i === 0 ? ' class="active" aria-current="true"' : '') +
+                            ' aria-label="Photo ' + (i + 1) + '"></button>';
+                    }).join('');
+                    countEl.textContent = item.images.length + ' photo' + (item.images.length > 1 ? 's' : '');
+                    galleryWrap.classList.remove('d-none');
+                    /* Reset carousel to first slide */
+                    var carouselEl = document.getElementById('news-gallery-carousel');
+                    var existingCarousel = bootstrap.Carousel.getInstance(carouselEl);
+                    if (existingCarousel) existingCarousel.dispose();
+                    new bootstrap.Carousel(carouselEl, { interval: 3500, ride: 'carousel' });
+                } else if (item.image) {
+                    singleImg.src = item.image;
+                    singleImg.alt = item.titre;
+                    singleImg.classList.remove('d-none');
                 }
 
                 document.getElementById('news-modal-content').textContent = item.contenu || item.resume;
@@ -1022,7 +1113,7 @@
 
             window.deleteNews = function (id) {
                 if (!confirm('Supprimer cette actualité ?')) return;
-                var news = getNews().filter(function (n) { return n.id !== id; });
+                var news = getUserNews().filter(function (n) { return n.id !== id; });
                 localStorage.setItem(LS_KEY, JSON.stringify(news));
                 renderNews();
             };
