@@ -460,7 +460,7 @@
                     <img id="news-modal-img" src="" alt="" class="img-fluid rounded mb-4 w-100 d-none" style="max-height:340px; object-fit:cover; object-position:center;">
                     <!-- Gallery carousel (seeded articles with multiple images) -->
                     <div id="news-modal-gallery" class="d-none mb-4">
-                        <div id="news-gallery-carousel" class="carousel slide rounded overflow-hidden" data-bs-ride="carousel">
+                        <div id="news-gallery-carousel" class="carousel slide carousel-fade rounded overflow-hidden" data-bs-ride="carousel">
                             <div class="carousel-indicators" id="gallery-indicators"></div>
                             <div class="carousel-inner" id="gallery-slides"></div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#news-gallery-carousel" data-bs-slide="prev">
@@ -1068,7 +1068,7 @@
                 var imgInner;
                 if (hasGallery) {
                     var carouselId = 'news-card-carousel-' + item.id;
-                    imgInner = '<div id="' + escHtml(carouselId) + '" class="carousel slide news-card-carousel" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="hover">' +
+                    imgInner = '<div id="' + escHtml(carouselId) + '" class="carousel slide carousel-fade news-card-carousel" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="hover">' +
                         '<div class="carousel-inner">' +
                         item.images.map(function (src, i) {
                             return '<div class="carousel-item' + (i === 0 ? ' active' : '') + '">' +
@@ -1170,7 +1170,7 @@
                     var carouselEl = document.getElementById('news-gallery-carousel');
                     var existingCarousel = bootstrap.Carousel.getInstance(carouselEl);
                     if (existingCarousel) existingCarousel.dispose();
-                    new bootstrap.Carousel(carouselEl, { interval: 3000, ride: 'carousel' });
+                    new bootstrap.Carousel(carouselEl, { interval: 3000, ride: 'carousel', wrap: true, touch: true });
                 } else if (item.image) {
                     singleImg.src = item.image;
                     singleImg.alt = item.titre;
