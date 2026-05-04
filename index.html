@@ -1065,9 +1065,23 @@
                 var hasGallery = item.seeded && item.images && item.images.length > 1;
                 var coverImg = item.image || (item.images && item.images[0]) || '';
 
-                var imgInner = coverImg
-                    ? '<img src="' + escHtml(coverImg) + '" class="card-img-top" alt="' + escHtml(item.titre) + '" loading="lazy">'
-                    : '<div class="news-img-placeholder"><i class="bi bi-image"></i></div>';
+                var imgInner;
+                if (hasGallery) {
+                    var carouselId = 'news-card-carousel-' + item.id;
+                    imgInner = '<div id="' + escHtml(carouselId) + '" class="carousel slide news-card-carousel" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="hover">' +
+                        '<div class="carousel-inner">' +
+                        item.images.map(function (src, i) {
+                            return '<div class="carousel-item' + (i === 0 ? ' active' : '') + '">' +
+                                '<img src="' + escHtml(src) + '" class="d-block w-100 card-img-top" alt="' + escHtml(item.titre) + ' - photo ' + (i + 1) + '" loading="lazy">' +
+                                '</div>';
+                        }).join('') +
+                        '</div>' +
+                        '</div>';
+                } else {
+                    imgInner = coverImg
+                        ? '<img src="' + escHtml(coverImg) + '" class="card-img-top" alt="' + escHtml(item.titre) + '" loading="lazy">'
+                        : '<div class="news-img-placeholder"><i class="bi bi-image"></i></div>';
+                }
 
                 var galleryBadge = hasGallery
                     ? '<span class="gallery-badge"><i class="bi bi-images me-1"></i>' + item.images.length + ' photos</span>'
@@ -1156,7 +1170,7 @@
                     var carouselEl = document.getElementById('news-gallery-carousel');
                     var existingCarousel = bootstrap.Carousel.getInstance(carouselEl);
                     if (existingCarousel) existingCarousel.dispose();
-                    new bootstrap.Carousel(carouselEl, { interval: 3500, ride: 'carousel' });
+                    new bootstrap.Carousel(carouselEl, { interval: 3000, ride: 'carousel' });
                 } else if (item.image) {
                     singleImg.src = item.image;
                     singleImg.alt = item.titre;
