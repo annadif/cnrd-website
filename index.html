@@ -477,6 +477,9 @@
                     <div id="news-modal-content" style="white-space: pre-line; line-height: 1.7;"></div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
+                    <a id="news-modal-pdf" href="#" class="btn btn-primary d-none" target="_blank" rel="noopener">
+                        <i class="bi bi-file-earmark-pdf me-1"></i>Open Doc
+                    </a>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                 </div>
             </div>
@@ -938,13 +941,28 @@
             ];
 
             function newsImagePath(fileName) {
-                return 'News/' + encodeURIComponent(fileName);
+                return 'News/' + encodeURI(fileName);
+            }
+
+            function newsAssetPath(fileName) {
+                return 'News/PRSA/' + encodeURI(fileName);
             }
 
             /* ------------------------------------------------------------------ */
             /* SEEDED NEWS — hardcoded articles with real images from img/ folder  */
             /* ------------------------------------------------------------------ */
             var SEED_NEWS = [
+                {
+                    id: 'seed-prsa-peees-2026-05-14',
+                    seeded: true,
+                    titre: 'Publication des documents de sauvegarde environnementale et sociale du PRSA-TD',
+                    categorie: 'Publication',
+                    date: '2026-05-14',
+                    image: newsAssetPath('Untitled.jpg'),
+                    pdf: newsAssetPath('Tchad PEES PRSA FA P178132 Appraisal_French.pdf'),
+                    resume: 'Le CNRD publie les documents de sauvegarde environnementale et sociale relatifs au financement additionnel du PRSA-TD.',
+                    contenu: 'Dans le cadre du partenariat avec le PRSA-TD, le CNRD a le plaisir de publier sur son site les documents de sauvegarde environnementale et sociale relatifs au financement additionnel pour consultation et téléchargement en cas de besoin :\n\n- Cadre de Politique de Réinstallation (CPR) ;\n- Plan de Gestion de la Main d’Œuvre (PGMO) pour le Tchad ;\n- Plan de gestion des pestes (PGP) ;\n- Plan de Mobilisation des Parties Prenantes (PMPP) ;\n- Plan d’Engagement Environnemental et Social (PEES).'
+                },
                 {
                     id: 'seed-impactee-2026',
                     seeded: true,
@@ -1178,6 +1196,17 @@
                 }
 
                 document.getElementById('news-modal-content').textContent = item.contenu || item.resume;
+
+                var pdfButton = document.getElementById('news-modal-pdf');
+                if (pdfButton) {
+                    if (item.pdf) {
+                        pdfButton.href = item.pdf;
+                        pdfButton.classList.remove('d-none');
+                    } else {
+                        pdfButton.classList.add('d-none');
+                        pdfButton.removeAttribute('href');
+                    }
+                }
 
                 var modal = new bootstrap.Modal(document.getElementById('newsDetailModal'));
                 modal.show();
