@@ -492,10 +492,6 @@
                     <div id="news-modal-content" style="white-space: pre-line; line-height: 1.7;"></div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
-                    <div id="news-modal-docs" class="d-flex gap-2 flex-wrap"></div>
-                    <a id="news-modal-pdf" href="#" class="btn btn-primary d-none" target="_blank" rel="noopener noreferrer">
-                        <i class="bi bi-file-earmark-pdf me-1"></i>Open Doc
-                    </a>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                 </div>
             </div>
@@ -985,6 +981,16 @@
                         { label: 'Plan d’Engagement Environnemental et Social (PEES)', file: newsAssetPath('PLAN D’ENGAGEMENT ENVIRONNEMENTAL ET SOCIAL  (PEES)  .pdf') }
                     ],
                     resume: 'Le CNRD publie les documents de sauvegarde environnementale et sociale relatifs au financement additionnel du PRSA-TD.',
+                    contenuHtml: [
+                        '<p>Dans le cadre du partenariat avec le PRSA-TD, le CNRD a le plaisir de publier sur son site les documents de sauvegarde environnementale et sociale relatifs au financement additionnel pour consultation et téléchargement en cas de besoin :</p>',
+                        '<ul class="mb-0 ps-3">',
+                        '<li>Cadre de Politique de Réinstallation (CPR) : <a href="' + newsAssetPath('CADRE DE POLITIQUE DE REINSTALLATION (CPR).pdf') + '" target="_blank" rel="noopener noreferrer">link</a></li>',
+                        '<li>Plan de Gestion de la Main d’Œuvre (PGMO) pour le Tchad : <a href="' + newsAssetPath('PLAN DE GESTION DE LA MAIN D’OEUVRE (PGMO) POUR LE TCHAD.pdf') + '" target="_blank" rel="noopener noreferrer">link</a></li>',
+                        '<li>Plan de gestion des pestes (PGP) : <a href="' + newsAssetPath('PLAN DE GESTION DES PESTES (PGP) .pdf') + '" target="_blank" rel="noopener noreferrer">link</a></li>',
+                        '<li>Plan de Mobilisation des Parties Prenantes (PMPP) : <a href="' + newsAssetPath('PLAN DE MOBILISATION DES PARTIES PRENANTES (PMPP.pdf') + '" target="_blank" rel="noopener noreferrer">link</a></li>',
+                        '<li>Plan d’Engagement Environnemental et Social (PEES) : <a href="' + newsAssetPath('PLAN D’ENGAGEMENT ENVIRONNEMENTAL ET SOCIAL  (PEES)  .pdf') + '" target="_blank" rel="noopener noreferrer">link</a></li>',
+                        '</ul>'
+                    ].join(''),
                     contenu: 'Dans le cadre du partenariat avec le PRSA-TD, le CNRD a le plaisir de publier sur son site les documents de sauvegarde environnementale et sociale relatifs au financement additionnel pour consultation et téléchargement en cas de besoin :\n\n- Cadre de Politique de Réinstallation (CPR) ;\n- Plan de Gestion de la Main d’Œuvre (PGMO) pour le Tchad ;\n- Plan de gestion des pestes (PGP) ;\n- Plan de Mobilisation des Parties Prenantes (PMPP) ;\n- Plan d’Engagement Environnemental et Social (PEES).'
                 },
                 {
@@ -1219,35 +1225,12 @@
                     singleImg.classList.remove('d-none');
                 }
 
-                document.getElementById('news-modal-content').textContent = item.contenu || item.resume;
-
-                var docsContainer = document.getElementById('news-modal-docs');
-                if (docsContainer) {
-                    docsContainer.innerHTML = '';
-                    if (item.docs && item.docs.length) {
-                        item.docs.forEach(function (d) {
-                            var a = document.createElement('a');
-                            a.className = 'btn btn-outline-primary btn-sm';
-                            a.href = d.file;
-                            a.target = '_blank';
-                            a.rel = 'noopener noreferrer';
-                            a.innerHTML = '<i class="bi bi-file-earmark-pdf me-1"></i>' + escHtml(d.label);
-                            docsContainer.appendChild(a);
-                        });
-                        docsContainer.classList.remove('d-none');
+                var contentEl = document.getElementById('news-modal-content');
+                if (contentEl) {
+                    if (item.contenuHtml) {
+                        contentEl.innerHTML = item.contenuHtml;
                     } else {
-                        docsContainer.classList.add('d-none');
-                    }
-                }
-
-                var pdfButton = document.getElementById('news-modal-pdf');
-                if (pdfButton) {
-                    if (item.pdf) {
-                        pdfButton.href = item.pdf;
-                        pdfButton.classList.remove('d-none');
-                    } else {
-                        pdfButton.classList.add('d-none');
-                        pdfButton.removeAttribute('href');
+                        contentEl.textContent = item.contenu || item.resume;
                     }
                 }
 
