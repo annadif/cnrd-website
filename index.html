@@ -1077,6 +1077,33 @@
                 resume: "Visite ministérielle au CNRD le 30 avril 2026 — revue des services et échanges avec la direction.",
                 contenu: "Dans le cadre de la série de visite des institutions du Ministère de l’Enseignement supérieur, de la recherche scientifique et de la Formation Professionnelle, le Ministre Dr. SITACK YOMBATINA et presque tout son staff ont effectué une descente au Centre National de Recherche pour le Développement (CNRD) dans la journée de 30 avril 2026 et passant par l’Académie de l’Ouest. Cette visite a permis à la délégation ministérielle de s’imprégner de visu de réalités au sein de ses institutions de tutelle.\n\nConstitué de plusieurs services, le CNRD est une institution de recherche scientifique dédiée au développement. Guidée par la DGA, la délégation a passé en revue les différents services techniques du centre."
             });
+            // Conference RNCE — 15 May 2026
+            SEED_NEWS.push({
+                id: 'seed-rnce-conf-2026-05-15',
+                seeded: true,
+                titre: 'Conférence-débat RNCE — 15 mai 2026',
+                categorie: 'Événement',
+                date: '2026-05-15',
+                image: newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.14 (2).jpeg'),
+                images: [
+                    newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.14 (2).jpeg'),
+                    newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.14.jpeg'),
+                    newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.15 (1).jpeg'),
+                    newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.15.jpeg'),
+                    newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.17 (1).jpeg'),
+                    newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.18 (1).jpeg'),
+                    newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.18 (2).jpeg'),
+                    newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.18.jpeg'),
+                    newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.26.jpeg'),
+                    newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.27 (2).jpeg'),
+                    newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.28 (1).jpeg'),
+                    newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.11.jpeg'),
+                    newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.12.jpeg'),
+                    newsImagePath('conference/WhatsApp Image 2026-05-15 at 14.30.14 (1).jpeg')
+                ],
+                resume: 'Conférence-débat RNCE sur la richesse et les défis de la protection du patrimoine tchadien.',
+                contenu: "La conférence-débat du 15 mai 2026 a réuni deux experts de la Réserve Naturelle et Culturelle de l'Ennedi (RNCE), notamment Issakha Gonney Guirki,  Directeur actuel engagé dans sa conservation depuis 2019, et  Dr Djimet Guemona, chercheur au CNRD et ancien chef du département d'archéologie de la réserve. Les débats sont modérés par la Dr Florence Sylvestre, directrice de l’IRD et professeure à l’Université de N’Djamena. Ensemble, ils ont abordé la richesse et les défis majeurs liés à la protection du patrimoine tchadien."
+            });
             /** Seeded news only, sorted most recent first */
             function getAllNews() {
                 var all = SEED_NEWS.slice();
@@ -1162,7 +1189,8 @@
                 var all = getAllNews();
                 var grid = document.getElementById('news-grid');
                 var empty = document.getElementById('news-empty');
-                if (!grid) return;
+                if (!grid || !empty) return;
+                
 
                 var items = all.slice(0, MAX_DISPLAY);
 
