@@ -473,6 +473,8 @@
                 <div class="modal-body pt-2">
                     <!-- Single image (user-added) -->
                     <img id="news-modal-img" src="" alt="" class="img-fluid rounded mb-4 w-100 d-none" style="max-height:340px; object-fit:cover; object-position:center;">
+                    <!-- Video (user-added) -->
+                    <video id="news-modal-video" class="rounded mb-4 w-100 d-none" style="max-height:340px; background:#000;" controls></video>
                     <!-- Gallery carousel (seeded articles with multiple images) -->
                     <div id="news-modal-gallery" class="d-none mb-4">
                         <div id="news-gallery-carousel" class="carousel slide carousel-fade rounded overflow-hidden" data-bs-ride="carousel">
@@ -1104,6 +1106,26 @@
                 resume: 'Conférence-débat RNCE sur la richesse et les défis de la protection du patrimoine tchadien.',
                 contenu: "La conférence-débat du 15 mai 2026 a réuni deux experts de la Réserve Naturelle et Culturelle de l'Ennedi (RNCE), notamment Issakha Gonney Guirki,  Directeur actuel engagé dans sa conservation depuis 2019, et  Dr Djimet Guemona, chercheur au CNRD et ancien chef du département d'archéologie de la réserve. Les débats sont modérés par la Dr Florence Sylvestre, directrice de l’IRD et professeure à l’Université de N’Djamena. Ensemble, ils ont abordé la richesse et les défis majeurs liés à la protection du patrimoine tchadien."
             });
+
+            // ORBINSYS partnership — 29 May 2026
+            SEED_NEWS.push({
+                id: 'seed-orbinsys-2026-05-29',
+                seeded: true,
+                titre: 'Accord de partenariat CNRD - ORBINSYS (29 mai 2026)',
+                categorie: 'Partenariat',
+                date: '2026-05-29',
+                image: newsImagePath('orbin/WhatsApp Image 2026-05-29 at 13.56.13.jpeg'),
+                images: [
+                    newsImagePath('orbin/WhatsApp Image 2026-05-29 at 13.56.13 (1).jpeg'),
+                    newsImagePath('orbin/WhatsApp Image 2026-05-29 at 13.56.13.jpeg'),
+                    newsImagePath('orbin/WhatsApp Image 2026-05-29 at 13.56.14.jpeg'),
+                    newsImagePath('orbin/WhatsApp Image 2026-05-29 at 13.56.15 (1).jpeg'),
+                    newsImagePath('orbin/WhatsApp Image 2026-05-29 at 13.56.15.jpeg')
+                ],
+                video: newsImagePath('orbin/WhatsApp Video 2026-05-29 at 13.56.14.mp4'),
+                resume: 'Signature d’un accord de partenariat entre le CNRD et ORBINSYS dans le domaine R&D numérique.',
+                contenu: "Sous la supervision de l’académie de l'Ouest, le Directeur Général du CNRD et le Directeur Général de la société ORBINSYS ont signé dans la matinée du 29 mai 2026 un accord de partenariat dans le domaine de Recherche et Développement en numérique."
+            });
             /** Seeded news only, sorted most recent first */
             function getAllNews() {
                 var all = SEED_NEWS.slice();
@@ -1219,16 +1241,23 @@
                     '<small class="text-muted"><i class="bi bi-calendar3 me-1"></i>' + escHtml(formatDate(item.date)) + '</small>';
 
                 var singleImg = document.getElementById('news-modal-img');
+                var videoEl = document.getElementById('news-modal-video');
                 var galleryWrap = document.getElementById('news-modal-gallery');
                 var slidesEl = document.getElementById('gallery-slides');
                 var indicatorsEl = document.getElementById('gallery-indicators');
                 var countEl = document.getElementById('gallery-count');
 
-                /* Reset both */
-                singleImg.classList.add('d-none');
-                galleryWrap.classList.add('d-none');
+                /* Reset visuals */
+                if (singleImg) { singleImg.classList.add('d-none'); singleImg.src = ''; }
+                if (videoEl) { try { videoEl.pause(); } catch (e) {} videoEl.classList.add('d-none'); videoEl.removeAttribute('src'); }
+                if (galleryWrap) { galleryWrap.classList.add('d-none'); }
 
-                if (item.seeded && item.images && item.images.length > 0) {
+                if (item.video) {
+                    if (videoEl) {
+                        videoEl.src = item.video;
+                        videoEl.classList.remove('d-none');
+                    }
+                } else if (item.seeded && item.images && item.images.length > 0) {
                     /* Build carousel */
                     slidesEl.innerHTML = item.images.map(function (src, i) {
                         return '<div class="carousel-item' + (i === 0 ? ' active' : '') + '">' +
