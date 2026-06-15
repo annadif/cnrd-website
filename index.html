@@ -1254,7 +1254,7 @@
                         '<div class="carousel-inner">' +
                         item.images.map(function (src, i) {
                             return '<div class="carousel-item' + (i === 0 ? ' active' : '') + '">' +
-                                '<img src="' + escHtml(src) + '" class="d-block w-100 card-img-top" alt="' + escHtml(item.titre) + ' - photo ' + (i + 1) + '" loading="lazy">' +
+                                '<img src="' + escHtml(src) + '" class="d-block w-100 card-img-top" alt="' + escHtml(item.titre) + ' - photo ' + (i + 1) + '" loading="eager" decoding="async">' +
                                 '</div>';
                         }).join('') +
                         '</div>' +
@@ -1346,7 +1346,7 @@
                     /* Build carousel */
                     slidesEl.innerHTML = item.images.map(function (src, i) {
                         return '<div class="carousel-item' + (i === 0 ? ' active' : '') + '">' +
-                            '<img src="' + escHtml(src) + '" alt="Photo ' + (i + 1) + ' — ' + escHtml(item.titre) + '" loading="lazy">' +
+                            '<img src="' + escHtml(src) + '" alt="Photo ' + (i + 1) + ' — ' + escHtml(item.titre) + '" loading="eager" decoding="async">' +
                             '</div>';
                     }).join('');
                     indicatorsEl.innerHTML = item.images.map(function (_, i) {
