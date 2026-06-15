@@ -1279,7 +1279,7 @@
                         '</div>';
                 } else {
                     imgInner = coverImg
-                        ? '<img src="' + escHtml(coverImg) + '" class="card-img-top" alt="' + escHtml(item.titre) + '" loading="lazy">'
+                        ? '<img src="' + escHtml(coverImg) + '" class="card-img-top" alt="' + escHtml(item.titre) + '" loading="eager" decoding="async">'
                         : '<div class="news-img-placeholder"><i class="bi bi-image"></i></div>';
                 }
 
@@ -1382,6 +1382,7 @@
                 } else if (item.image) {
                     singleImg.src = item.image;
                     singleImg.alt = item.titre;
+                    singleImg.loading = 'eager';
                     singleImg.classList.remove('d-none');
                 }
 
