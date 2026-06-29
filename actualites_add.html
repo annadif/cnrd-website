@@ -53,6 +53,57 @@
             object-fit: contain;
             background: #000;
         }
+        .archive-card {
+            border: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 100%;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, .08);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+        .archive-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 34px rgba(0, 0, 0, .13);
+        }
+        .archive-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            object-position: center;
+        }
+        .archive-card .card-body {
+            display: flex;
+            flex-direction: column;
+            min-height: 270px;
+        }
+        .archive-card .card-text {
+            flex: 1;
+            line-height: 1.6;
+        }
+        .archive-meta {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            flex-wrap: wrap;
+            margin-bottom: .75rem;
+        }
+        .archive-photo-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: .75rem;
+        }
+        .archive-photo-strip a {
+            display: block;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #f2f3f6;
+        }
+        .archive-photo-strip img {
+            width: 100%;
+            height: 86px;
+            object-fit: cover;
+            display: block;
+        }
         @media (max-width: 576px) {
             .news-hero {
                 padding: 1.25rem;
@@ -114,41 +165,43 @@
     <div class="container pb-5">
         <div class="news-hero mb-5">
             <div class="d-flex align-items-center gap-3 flex-wrap mb-3">
-                <span class="badge bg-warning text-dark">Événement</span>
-                <span class="text-muted"><i class="bi bi-calendar3 me-1"></i>20 avril 2026</span>
+                <span class="badge bg-primary">Archives</span>
+                <span class="text-muted" id="archive-count"></span>
             </div>
-            <h2 class="h1 mb-3">Atelier de restitution des résultats du Projet IMPACTEE au CNRD</h2>
+            <h2 class="h1 mb-3">Toutes les activites et evenements du CNRD</h2>
             <p class="mb-0" style="line-height: 1.8;">
-                Le Centre National de Recherche pour le Développement (CNRD) a accueilli les 20 et 21 avril 2026
-                l'atelier de restitution des résultats du Projet IMPACTEE, en partenariat avec l'IRD. Les échanges
-                ont porté sur les impacts de l'élevage transhumant sur les ressources naturelles et les habitats du
-                Parc National de Zakouma, avec un focus sur la conservation et la gestion durable.
+                Retrouvez ici les anciennes activites, evenements, partenariats, reunions, publications et galeries photos du CNRD.
             </p>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-            <h3 class="mb-0">Galerie Photos</h3>
-            <span class="text-muted" id="news-photo-count"></span>
-        </div>
-        <div class="row g-4" id="news-gallery-grid"></div>
+        <div class="row g-4" id="archive-grid"></div>
     </div>
     <!-- News Content End -->
 
-    <!-- Gallery Modal Start -->
-    <div class="modal fade" id="newsPhotoModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
+    <!-- News Detail Modal Start -->
+    <div class="modal fade" id="archiveDetailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title" id="news-photo-title">Photo actualité</h5>
+                    <div>
+                        <div class="archive-meta mb-2" id="archive-modal-meta"></div>
+                        <h5 class="modal-title fw-bold" id="archive-modal-title"></h5>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
-                <div class="modal-body pt-2">
-                    <img id="news-photo-preview" class="gallery-modal-img rounded" src="" alt="Photo actualité">
+                <div class="modal-body pt-3">
+                    <div id="archive-modal-media" class="mb-4"></div>
+                    <div id="archive-modal-content" class="mb-4" style="white-space: pre-line; line-height: 1.75;"></div>
+                    <div id="archive-modal-actions" class="d-flex flex-wrap gap-2 mb-4"></div>
+                    <div id="archive-modal-gallery-wrap" class="d-none">
+                        <h6 class="mb-3">Photos de l'activite</h6>
+                        <div class="archive-photo-strip" id="archive-modal-gallery"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Gallery Modal End -->
+    <!-- News Detail Modal End -->
 
 
     <!-- Footer Start -->
@@ -207,7 +260,11 @@
         (function () {
             'use strict';
 
-            var NEWS_IMAGE_FILES = [
+            function asset(path) {
+                return 'News/' + path.split('/').map(encodeURIComponent).join('/');
+            }
+
+            var impacteePhotos = [
                 'WhatsApp Image 2026-04-20 at 18.19.36.jpeg',
                 'WhatsApp Image 2026-04-20 at 18.19.37.jpeg',
                 'WhatsApp Image 2026-04-20 at 18.19.37(1).jpeg',
@@ -219,11 +276,219 @@
                 'WhatsApp Image 2026-04-20 at 18.19.40.jpeg',
                 'WhatsApp Image 2026-04-20 at 18.19.41.jpeg',
                 'WhatsApp Image 2026-04-20 at 18.19.41(1).jpeg'
-            ];
+            ].map(asset);
 
-            function photoPath(fileName) {
-                return 'News/' + encodeURIComponent(fileName);
-            }
+            var ACTIVITIES = [
+                {
+                    title: 'Cafe Drone : innovations, reglementation et usages operationnels',
+                    category: 'Evenement',
+                    date: '2026-06-25',
+                    cover: asset('Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.21.jpeg'),
+                    photos: [
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.21.jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.22 (1).jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.22 (2).jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.22 (3).jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.22.jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.23 (1).jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.23.jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.24.jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.25 (1).jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.25 (2).jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.25 (3).jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.25.jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.26 (1).jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.26 (2).jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.26 (3).jpeg',
+                        'Cafe Drone/WhatsApp Image 2026-06-29 at 12.52.26.jpeg'
+                    ].map(asset),
+                    summary: 'Le CNRD a organise, avec Drone Tech Africa, Tchad Flying Labs et WeRobotics, un Cafe Drone consacre aux innovations, a la reglementation et aux usages operationnels des drones.',
+                    content: "En collaboration avec les organisations Drone Tech Africa, Tchad Flying Labs et WeRobotics, le CNRD a organise le jeudi 25 juin 2026 de 8h00 a 14h00 un Cafe Drone sur le theme : Drones : innovations, reglementation et usages operationnels.\n\nLe Cafe Drone est un cadre d'echange qui a permis aux jeunes ingenieurs en telecommunication, en informatique et IA, ainsi qu'a d'autres chercheurs et experts, de s'exprimer sur ce sujet.\n\nL'objectif de cet evenement, a la fois technique et collaboratif, est de rassembler les acteurs publics, prives, academiques et associatifs autour des enjeux lies aux drones : innovations technologiques, cadre reglementaire, retours d'experience terrain et perspectives d'integration dans les chaines de valeur locales. C'est en quelque sorte un plaidoyer pour arriver a la reglementation et a la liberalisation de l'utilisation de cet outil dans le developpement socio-economique et culturel."
+                },
+                {
+                    title: 'Conference-debat : Les babouins de l\'Ennedi',
+                    category: 'Evenement',
+                    date: '2026-06-26',
+                    cover: asset('26 juin 2026/WhatsApp Image 2026-06-29 at 12.54.57 (1).jpeg'),
+                    photos: [
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.54.57 (1).jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.54.57.jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.54.58.jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.54.59 (1).jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.54.59 (2).jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.54.59.jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.55.00 (1).jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.55.00.jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.55.01 (1).jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.55.01.jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.55.02.jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.55.03.jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.55.04 (1).jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.55.04.jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.55.05 (1).jpeg',
+                        '26 juin 2026/WhatsApp Image 2026-06-29 at 12.55.05.jpeg'
+                    ].map(asset),
+                    summary: 'En partenariat avec African Parks et la RNCE, le CNRD a organise une conference-debat sur les babouins de l\'Ennedi, leur univers singulier et leur lien avec l\'Egypte antique.',
+                    content: "En partenariat avec African Parks et la Reserve Nationale et Culturelle de l'Ennedi (RNCE), le Centre National de Recherche pour le Developpement (CNRD) a organise, le vendredi 26 juin 2026 au CNRD de 09h30 a 12h00, une conference-debat sur le theme : Les babouins de l'Ennedi : leur univers singulier aujourd'hui et leur lien avec l'Egypte antique.\n\nModeree par Dr. Abdallah Brahim El-hadj Ali, Charge de Recherche/CNRD, cette conference-debat a permis a la Prof. Catherine Hobaiter, primatologue a University St Andrews, School of Psychology and Neuroscience, St Mary's Quad, KY16 9JP, Scotland, d'exposer sur ce sujet.\n\nLes babouins peuplant le massif de l'Ennedi, au nord-est du Tchad, survivent dans des conditions desertiques extremes. Concentres autour des gueltas permanentes comme celle d'Archei, ils sont les temoins vivants de l'epoque ou le Sahara etait verdoyant. Ces populations sauvages offrent un fascinant miroir naturel aux babouins de l'Egypte antique.\n\nL'univers singulier des babouins de l'Ennedi aujourd'hui\n- Refuges sahariens : dans cet environnement hostile, ces singes sont infeodes aux points d'eau et aux canyons encaisses. La celebre Guelta d'Archei constitue pour eux un havre de survie ou ils partagent un biotope isole avec des crocodiles reliques.\n- Comportement social : pour faire face aux rigueurs du climat et a la pression des predateurs, comme les hyenes et les grands rapaces, ils vivent en bandes tres structurees et hierarchisees.\n- Adaptation : ces groupes arides se distinguent par une resilience incroyable, se nourrissant de racines, de fruits de dattiers sauvages, de petits invertebres et de graines trouves dans les oueds.\n\nLe lien sacre avec l'Egypte antique\n- L'incarnation de Thot : les anciens Egyptiens vouaient un culte aux babouins, principalement l'espece Papio hamadryas. Ils etaient veneres comme les representants de Thot, dieu lunaire de la sagesse, du savoir et de l'ecriture.\n- Importations rituelles : n'etant pas originaires du Nil, ces animaux devaient etre importes par voie maritime ou terrestre depuis des regions africaines sauvages, souvent associees au legendaire pays de Pount.\n- L'echo de l'Ennedi : les peintures rupestres qui parsement l'Ennedi illustrent la presence historique de ces primates a travers le Sahara. L'observation de leur mode de vie actuel dans l'Ennedi aide les archeozoologues a comprendre comment les Egyptiens de l'Antiquite, fascines par leur intelligence et leurs cris matinaux, ont pu les integrer au coeur de leur pantheon."
+                },
+                {
+                    title: 'Conference sur le Prix Faustin-Archange Touadera pour l\'Excellence Scientifique Africaine',
+                    category: 'Evenement',
+                    date: '2026-06-12',
+                    cover: asset('Conf Boukar/20260612_100304.jpg.jpeg'),
+                    photos: [
+                        'Conf Boukar/20260612_100304.jpg.jpeg',
+                        'Conf Boukar/20260612_100407.jpg.jpeg',
+                        'Conf Boukar/20260612_110336.jpg.jpeg',
+                        'Conf Boukar/20260612_113537.jpg.jpeg',
+                        'Conf Boukar/20260612_113615.jpg.jpeg',
+                        'Conf Boukar/20260612_115706.jpg.jpeg',
+                        'Conf Boukar/20260612_115713.jpg.jpeg',
+                        'Conf Boukar/20260612_095757.jpg.jpeg',
+                        'Conf Boukar/20260612_095805.jpg.jpeg',
+                        'Conf Boukar/20260612_100204.jpg.jpeg'
+                    ].map(asset),
+                    summary: 'Rencontre d\'information et de sensibilisation organisee au CNRD avec l\'IARPA.',
+                    content: 'Le vendredi 12 juin 2026, le CNRD a accueilli une conference sur le Prix Faustin-Archange Touadera pour l\'Excellence Scientifique Africaine. Dr Boukar Michel a anime les echanges autour du theme: la science et l\'innovation au service de la souverainete et de la transformation structurelle de l\'Afrique.'
+                },
+                {
+                    title: 'Reunion du personnel du CNRD',
+                    category: 'Reunion',
+                    date: '2026-06-10',
+                    cover: asset('reunion/WhatsApp Image 2026-06-10 at 16.02.33.jpeg'),
+                    photos: [
+                        'reunion/WhatsApp Image 2026-06-10 at 16.02.33.jpeg',
+                        'reunion/WhatsApp Image 2026-06-10 at 16.02.34.jpeg',
+                        'reunion/WhatsApp Image 2026-06-10 at 16.02.35.jpeg',
+                        'reunion/WhatsApp Image 2026-06-10 at 16.02.36.jpeg',
+                        'reunion/WhatsApp Image 2026-06-10 at 16.02.38.jpeg',
+                        'reunion/WhatsApp Image 2026-06-10 at 16.02.39.jpeg',
+                        'reunion/WhatsApp Image 2026-06-10 at 16.02.40.jpeg'
+                    ].map(asset),
+                    summary: 'Reunion axee sur le rappel disciplinaire, l\'assiduite et le respect des horaires.',
+                    content: 'Le Directeur General du CNRD, Prof. Mahamoud Youssou Khayal, a tenu une reunion avec le personnel. L\'ordre du jour portait sur le rappel disciplinaire, l\'assiduite, le respect des horaires de travail et l\'assainissement du Centre.'
+                },
+                {
+                    title: 'Conference-debat sur la consommation de ble au Tchad',
+                    category: 'Evenement',
+                    date: '2026-06-05',
+                    cover: asset('Vendredi/Screenshot 2026-06-08 125424.png'),
+                    photos: [
+                        'Vendredi/Screenshot 2026-06-08 125424.png',
+                        'Vendredi/WhatsApp Image 2026-06-05 at 14.24.58 (1).jpeg',
+                        'Vendredi/WhatsApp Image 2026-06-05 at 14.25.10.jpeg',
+                        'Vendredi/WhatsApp Image 2026-06-05 at 14.25.11.jpeg',
+                        'Vendredi/WhatsApp Image 2026-06-05 at 14.25.14.jpeg',
+                        'Vendredi/WhatsApp Image 2026-06-05 at 14.25.15.jpeg',
+                        'Vendredi/WhatsApp Image 2026-06-05 at 14.27.54 (1).jpeg'
+                    ].map(asset),
+                    summary: 'Conference-debat sur les enjeux et perspectives de developpement de la filiere ble.',
+                    content: 'Le CNRD a abrite une conference-debat sur le theme: Consommation de ble au Tchad, enjeux, leviers et perspectives de developpement de la filiere. La rencontre a ete animee par Dr Alladjaba Abdoulaye avec Dr Nguinambaye Mberdoum Memti comme moderateur.'
+                },
+                {
+                    title: 'Accord de partenariat CNRD - ORBINSYS',
+                    category: 'Partenariat',
+                    date: '2026-05-29',
+                    cover: asset('orbin/WhatsApp Image 2026-05-29 at 13.56.13.jpeg'),
+                    photos: [
+                        'orbin/WhatsApp Image 2026-05-29 at 13.56.13 (1).jpeg',
+                        'orbin/WhatsApp Image 2026-05-29 at 13.56.13.jpeg',
+                        'orbin/WhatsApp Image 2026-05-29 at 13.56.14.jpeg',
+                        'orbin/WhatsApp Image 2026-05-29 at 13.56.15 (1).jpeg',
+                        'orbin/WhatsApp Image 2026-05-29 at 13.56.15.jpeg'
+                    ].map(asset),
+                    summary: 'Signature d\'un accord de partenariat dans le domaine Recherche et Developpement numerique.',
+                    content: 'Sous la supervision de l\'academie de l\'Ouest, le Directeur General du CNRD et le Directeur General de la societe ORBINSYS ont signe un accord de partenariat dans le domaine de la Recherche et Developpement en numerique.',
+                    links: [{ label: 'Voir la video', url: asset('orbin/WhatsApp Video 2026-05-29 at 13.56.14.mp4') }]
+                },
+                {
+                    title: 'Conference-debat RNCE',
+                    category: 'Evenement',
+                    date: '2026-05-15',
+                    cover: asset('conference/WhatsApp Image 2026-05-15 at 14.30.14 (2).jpeg'),
+                    photos: [
+                        'conference/WhatsApp Image 2026-05-15 at 14.30.14 (2).jpeg',
+                        'conference/WhatsApp Image 2026-05-15 at 14.30.14.jpeg',
+                        'conference/WhatsApp Image 2026-05-15 at 14.30.15 (1).jpeg',
+                        'conference/WhatsApp Image 2026-05-15 at 14.30.18.jpeg',
+                        'conference/WhatsApp Image 2026-05-15 at 14.30.26.jpeg',
+                        'conference/WhatsApp Image 2026-05-15 at 14.30.28 (1).jpeg'
+                    ].map(asset),
+                    summary: 'Conference-debat sur la richesse et les defis de la protection du patrimoine tchadien.',
+                    content: 'La conference-debat RNCE a reuni des experts de la Reserve Naturelle et Culturelle de l\'Ennedi, dont Issakha Gonney Guirki et Dr Djimet Guemona, autour de la protection et de la valorisation du patrimoine tchadien.'
+                },
+                {
+                    title: 'Publication des documents de sauvegarde environnementale et sociale du PRSA-TD',
+                    category: 'Publication',
+                    date: '2026-05-14',
+                    cover: asset('PRSA/Untitled.jpg'),
+                    summary: 'Publication de documents PRSA-TD pour consultation et telechargement.',
+                    content: 'Dans le cadre du partenariat avec le PRSA-TD, le CNRD publie les documents de sauvegarde environnementale et sociale relatifs au financement additionnel pour consultation et telechargement.',
+                    links: [
+                        { label: 'CPR', url: asset('PRSA/CADRE DE POLITIQUE DE REINSTALLATION (CPR).pdf') },
+                        { label: 'PGMO', url: asset('PRSA/PLAN DE GESTION DE LA MAIN D�OEUVRE (PGMO) POUR LE TCHAD.pdf') },
+                        { label: 'PGP', url: asset('PRSA/PLAN DE GESTION DES PESTES (PGP) .pdf') },
+                        { label: 'PEES', url: asset('PRSA/Tchad PEES PRSA FA P178132 Appraisal_French.pdf') }
+                    ]
+                },
+                {
+                    title: 'Visite du Ministre au CNRD',
+                    category: 'Evenement',
+                    date: '2026-04-30',
+                    cover: asset('Visite ministre/WhatsApp Image 2026-04-30 at 17.49.26.jpeg'),
+                    photos: [
+                        'Visite ministre/WhatsApp Image 2026-04-30 at 17.49.26.jpeg',
+                        'Visite ministre/WhatsApp Image 2026-04-30 at 17.49.27.jpeg',
+                        'Visite ministre/WhatsApp Image 2026-04-30 at 17.49.27(1).jpeg',
+                        'Visite ministre/WhatsApp Image 2026-04-30 at 17.49.28.jpeg',
+                        'Visite ministre/WhatsApp Image 2026-04-30 at 17.49.29.jpeg',
+                        'Visite ministre/WhatsApp Image 2026-04-30 at 17.49.30.jpeg',
+                        'Visite ministre/Untitled.jpg'
+                    ].map(asset),
+                    summary: 'Descente du Ministre de l\'Enseignement superieur, de la Recherche et de la Formation professionnelle au CNRD.',
+                    content: 'Le Ministre Dr. Sitack Yombatina et son staff ont effectue une visite au CNRD le 30 avril 2026. La delegation a passe en revue les differents services techniques du centre et a echange avec la direction.'
+                },
+                {
+                    title: 'Alumni Day: manifestation scientifique du CNRD avec l\'Ambassade de France',
+                    category: 'Evenement',
+                    date: '2026-04-29',
+                    cover: asset('WhatsApp Image 2026-04-29 at 13.11.11.jpeg'),
+                    photos: [
+                        'WhatsApp Image 2026-04-29 at 13.11.11.jpeg',
+                        'WhatsApp Image 2026-04-29 at 13.11.12.jpeg',
+                        'WhatsApp Image 2026-04-29 at 13.11.13.jpeg',
+                        'WhatsApp Image 2026-04-29 at 13.11.14.jpeg',
+                        'WhatsApp Image 2026-04-29 at 13.11.15.jpeg',
+                        'WhatsApp Image 2026-04-29 at 13.11.20.jpeg',
+                        'WhatsApp Image 2026-04-29 at 13.11.26.jpeg'
+                    ].map(asset),
+                    summary: 'Manifestation scientifique pour valoriser le patrimoine national et les chercheurs alumni du CNRD.',
+                    content: 'Dans le cadre du Alumni Day, le CNRD et le Service de Cooperation et d\'Action Culturelle de l\'Ambassade de France au Tchad ont organise une manifestation scientifique pour valoriser le patrimoine paleontologique et archeologique du Tchad.'
+                },
+                {
+                    title: 'Signature d\'un accord de partenariat entre la RNCE et le CNRD',
+                    category: 'Partenariat',
+                    date: '2026-04-28',
+                    cover: asset('WhatsApp Image 2026-04-28 at 15.45.08.jpeg'),
+                    photos: [
+                        'WhatsApp Image 2026-04-28 at 15.45.08.jpeg',
+                        'WhatsApp Image 2026-04-28 at 15.45.07(1).jpeg',
+                        'WhatsApp Image 2026-04-28 at 15.44.08.jpeg',
+                        'WhatsApp Image 2026-04-28 at 15.44.08(1).jpeg'
+                    ].map(asset),
+                    summary: 'Cadre de cooperation scientifique, technique et institutionnel entre la RNCE et le CNRD.',
+                    content: 'Le 28 avril 2026, la Reserve Naturelle et Culturelle de l\'Ennedi (RNCE) et le CNRD ont signe un accord de partenariat pour renforcer la recherche, la conservation, la valorisation et la gestion durable du patrimoine naturel et culturel.'
+                },
+                {
+                    title: 'Atelier de restitution des resultats du Projet IMPACTEE au CNRD',
+                    category: 'Evenement',
+                    date: '2026-04-20',
+                    cover: impacteePhotos[0],
+                    photos: impacteePhotos,
+                    summary: 'Atelier de restitution sur les impacts de l\'elevage transhumant sur les ressources naturelles du Parc National de Zakouma.',
+                    content: 'Le CNRD a accueilli les 20 et 21 avril 2026 l\'atelier de restitution des resultats du Projet IMPACTEE, en partenariat avec l\'IRD. Les echanges ont porte sur les impacts de l\'elevage transhumant sur les ressources naturelles et les habitats du Parc National de Zakouma.'
+                }
+            ];
 
             function escHtml(str) {
                 return String(str || '').replace(/[&<>"']/g, function (c) {
@@ -231,34 +496,114 @@
                 });
             }
 
-            function renderGallery() {
-                var grid = document.getElementById('news-gallery-grid');
-                var count = document.getElementById('news-photo-count');
+            function formatDate(iso) {
+                if (!iso) return '';
+                return new Date(iso + 'T00:00:00').toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+            }
+
+            function renderArchive() {
+                var grid = document.getElementById('archive-grid');
+                var count = document.getElementById('archive-count');
                 if (!grid) return;
 
-                count.textContent = NEWS_IMAGE_FILES.length + ' photos';
-                grid.innerHTML = NEWS_IMAGE_FILES.map(function (fileName, i) {
-                    var src = photoPath(fileName);
-                    var label = 'Photo ' + (i + 1);
-                    return '<div class="col-sm-6 col-lg-4">' +
-                        '<div class="news-gallery-card" onclick="openNewsPhoto(\'' + escHtml(src) + '\', \'' + escHtml(label) + '\')">' +
-                        '<img src="' + escHtml(src) + '" alt="' + escHtml(label) + '" loading="lazy">' +
-                        '</div>' +
+                ACTIVITIES.sort(function (a, b) { return b.date.localeCompare(a.date); });
+                if (count) count.textContent = ACTIVITIES.length + ' activites et evenements';
+
+                grid.innerHTML = ACTIVITIES.map(function (item, index) {
+                    var photos = item.photos && item.photos.length ? item.photos : [];
+                    var hasGallery = photos.length > 1;
+                    var photoCount = photos.length ? '<span class="badge bg-dark"><i class="bi bi-images me-1"></i>' + photos.length + ' photos</span>' : '';
+                    var mediaHtml;
+                    if (hasGallery) {
+                        var carouselId = 'archive-card-carousel-' + index;
+                        mediaHtml = '<div id="' + carouselId + '" class="carousel slide carousel-fade archive-card-carousel" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="hover">' +
+                            '<div class="carousel-inner">' +
+                            photos.map(function (src, i) {
+                                return '<div class="carousel-item' + (i === 0 ? ' active' : '') + '">' +
+                                    '<img src="' + escHtml(src) + '" alt="' + escHtml(item.title) + ' - photo ' + (i + 1) + '" loading="lazy">' +
+                                    '</div>';
+                            }).join('') +
+                            '</div>' +
                         '</div>';
+                    } else {
+                        mediaHtml = '<img src="' + escHtml(item.cover) + '" alt="' + escHtml(item.title) + '" loading="lazy">';
+                    }
+                    return '<div class="col-md-6 col-lg-4">' +
+                        '<article class="card archive-card">' +
+                            mediaHtml +
+                            '<div class="card-body">' +
+                                '<div class="archive-meta">' +
+                                    '<span class="badge bg-primary">' + escHtml(item.category) + '</span>' +
+                                    photoCount +
+                                    '<small class="text-muted"><i class="bi bi-calendar3 me-1"></i>' + escHtml(formatDate(item.date)) + '</small>' +
+                                '</div>' +
+                                '<h5 class="card-title">' + escHtml(item.title) + '</h5>' +
+                                '<p class="card-text text-muted">' + escHtml(item.summary) + '</p>' +
+                                '<button class="btn btn-primary mt-3 align-self-start" type="button" onclick="openArchiveActivity(' + index + ')">Lire la suite</button>' +
+                            '</div>' +
+                        '</article>' +
+                    '</div>';
                 }).join('');
             }
 
-            window.openNewsPhoto = function (src, label) {
-                var img = document.getElementById('news-photo-preview');
-                var title = document.getElementById('news-photo-title');
-                img.src = src;
-                img.alt = label;
-                title.textContent = label;
-                var modal = new bootstrap.Modal(document.getElementById('newsPhotoModal'));
-                modal.show();
+            window.openArchiveActivity = function (index) {
+                var item = ACTIVITIES[index];
+                if (!item) return;
+
+                document.getElementById('archive-modal-title').textContent = item.title;
+                document.getElementById('archive-modal-meta').innerHTML =
+                    '<span class="badge bg-primary">' + escHtml(item.category) + '</span>' +
+                    '<small class="text-muted"><i class="bi bi-calendar3 me-1"></i>' + escHtml(formatDate(item.date)) + '</small>';
+
+                var media = document.getElementById('archive-modal-media');
+                var photos = item.photos && item.photos.length ? item.photos : [];
+                if (photos.length > 1) {
+                    media.innerHTML = '<div id="archive-main-carousel" class="carousel slide carousel-fade rounded overflow-hidden" data-bs-ride="carousel">' +
+                        '<div class="carousel-indicators">' +
+                        photos.map(function (_, i) {
+                            return '<button type="button" data-bs-target="#archive-main-carousel" data-bs-slide-to="' + i + '"' + (i === 0 ? ' class="active" aria-current="true"' : '') + ' aria-label="Photo ' + (i + 1) + '"></button>';
+                        }).join('') +
+                        '</div>' +
+                        '<div class="carousel-inner">' +
+                        photos.map(function (src, i) {
+                            return '<div class="carousel-item' + (i === 0 ? ' active' : '') + '">' +
+                                '<img class="d-block w-100" style="max-height: 520px; object-fit: contain; background:#111;" src="' + escHtml(src) + '" alt="Photo ' + (i + 1) + ' - ' + escHtml(item.title) + '" loading="eager">' +
+                                '</div>';
+                        }).join('') +
+                        '</div>' +
+                        '<button class="carousel-control-prev" type="button" data-bs-target="#archive-main-carousel" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Precedent</span></button>' +
+                        '<button class="carousel-control-next" type="button" data-bs-target="#archive-main-carousel" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Suivant</span></button>' +
+                    '</div>';
+                    var carouselEl = document.getElementById('archive-main-carousel');
+                    var existingCarousel = bootstrap.Carousel.getInstance(carouselEl);
+                    if (existingCarousel) existingCarousel.dispose();
+                    new bootstrap.Carousel(carouselEl, { interval: 3000, ride: 'carousel', wrap: true, touch: true });
+                } else {
+                    media.innerHTML = '<img class="img-fluid rounded w-100" style="max-height: 420px; object-fit: cover; object-position: center;" src="' + escHtml(item.cover) + '" alt="' + escHtml(item.title) + '">';
+                }
+                document.getElementById('archive-modal-content').textContent = item.content || item.summary;
+
+                var actions = document.getElementById('archive-modal-actions');
+                actions.innerHTML = (item.links || []).map(function (link) {
+                    return '<a class="btn btn-outline-primary btn-sm" href="' + escHtml(link.url) + '" target="_blank" rel="noopener noreferrer">' + escHtml(link.label) + '</a>';
+                }).join('');
+
+                var galleryWrap = document.getElementById('archive-modal-gallery-wrap');
+                var gallery = document.getElementById('archive-modal-gallery');
+                if (item.photos && item.photos.length) {
+                    gallery.innerHTML = item.photos.map(function (src, i) {
+                        return '<a href="' + escHtml(src) + '" target="_blank" rel="noopener noreferrer"><img src="' + escHtml(src) + '" alt="Photo ' + (i + 1) + '" loading="lazy"></a>';
+                    }).join('');
+                    galleryWrap.classList.remove('d-none');
+                } else {
+                    gallery.innerHTML = '';
+                    galleryWrap.classList.add('d-none');
+                }
+
+                new bootstrap.Modal(document.getElementById('archiveDetailModal')).show();
             };
 
-            document.addEventListener('DOMContentLoaded', renderGallery);
+            document.addEventListener('DOMContentLoaded', renderArchive);
         })();
     </script>
 </body>
