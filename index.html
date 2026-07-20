@@ -30,9 +30,56 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- Event Popup Stylesheet -->
+    <link href="css/event-popup.css" rel="stylesheet">
 </head>
 
 <body>
+    <!-- Event Popup Start -->
+    <div id="event-popup-overlay" role="dialog" aria-modal="true" aria-labelledby="event-popup-title">
+        <div class="event-popup-card">
+            <button type="button" class="event-popup-close" data-event-popup-close aria-label="Fermer">
+                <i class="bi bi-x-lg"></i>
+            </button>
+            <div class="event-popup-media">
+                <span class="event-popup-badge" id="event-popup-badge">Événement à venir</span>
+                <img src="News/Toumai/affiche_Paysage.png" alt="Affiche — 2e Colloque International de Paléontologie, 25 ans de Toumaï">
+            </div>
+            <div class="event-popup-body">
+                <div class="event-popup-eyebrow">CNRD vous invite</div>
+                <h2 class="event-popup-title" id="event-popup-title">2ᵉ Colloque International de Paléontologie — 25 ans de Toumaï, ancêtre de l'Humanité</h2>
+                <p class="event-popup-subtitle">« Tchad au cœur de l'humanité : lectures croisées des archives paléontologiques et géologiques »</p>
+                <div class="event-popup-meta">
+                    <div class="event-popup-meta-item">
+                        <i class="bi bi-calendar-event"></i>
+                        <div>
+                            <strong>21 et 22 juillet 2026</strong>
+                            <span>Deux journées de conférences et de discussions</span>
+                        </div>
+                    </div>
+                    <div class="event-popup-meta-item">
+                        <i class="bi bi-geo-alt"></i>
+                        <div>
+                            <strong>N'Djamena, Tchad</strong>
+                            <span>Salle de conférence du Ministère en charge des Affaires Étrangères</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="event-popup-patronage">Sous le Haut Patronage du Président de la République du Tchad, Maréchal Mahamat Idriss Deby Itno.</p>
+                <div class="event-popup-actions">
+                    <a class="btn btn-primary" href="News/Toumai/draft%20agenda_vCO_MNA1.pdf" target="_blank" rel="noopener">
+                        <i class="bi bi-file-earmark-pdf me-2"></i>Voir le programme complet
+                    </a>
+                    <button type="button" class="btn btn-outline-secondary" data-event-popup-close>
+                        Continuer vers le site
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Event Popup End -->
+
     <!-- Spinner Start -->
     <div id="spinner"
         class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -933,6 +980,7 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="js/event-popup.js"></script>
 
     <!-- Actualités JS -->
     <script>
@@ -960,6 +1008,10 @@
 
             function newsAssetPath(fileName) {
                 return 'News/PRSA/' + encodeURI(fileName);
+            }
+
+            function toumaiAssetPath(fileName) {
+                return 'News/Toumai/' + encodeURI(fileName);
             }
 
             /* ------------------------------------------------------------------ */
@@ -1267,6 +1319,24 @@
                 ],
                 resume: 'Le CNRD a organise, avec Drone Tech Africa, Tchad Flying Labs et WeRobotics, un Cafe Drone consacre aux innovations, a la reglementation et aux usages operationnels des drones.',
                 contenu: "En collaboration avec les organisations Drone Tech Africa, Tchad Flying Labs et WeRobotics, le CNRD a organise le jeudi 25 juin 2026 de 8h00 a 14h00 un Cafe Drone sur le theme : Drones : innovations, reglementation et usages operationnels.\n\nLe Cafe Drone est un cadre d'echange qui a permis aux jeunes ingenieurs en telecommunication, en informatique et IA, ainsi qu'a d'autres chercheurs et experts, de s'exprimer sur ce sujet.\n\nL'objectif de cet evenement, a la fois technique et collaboratif, est de rassembler les acteurs publics, prives, academiques et associatifs autour des enjeux lies aux drones : innovations technologiques, cadre reglementaire, retours d'experience terrain et perspectives d'integration dans les chaines de valeur locales. C'est en quelque sorte un plaidoyer pour arriver a la reglementation et a la liberalisation de l'utilisation de cet outil dans le developpement socio-economique et culturel."
+            });
+            // 2e Colloque International de Paléontologie — 25 ans de Toumaï (21-22 juillet 2026)
+            SEED_NEWS.push({
+                id: 'seed-colloque-paleontologie-toumai-2026-07-21',
+                seeded: true,
+                titre: "2ᵉ Colloque International de Paléontologie — 25 ans de Toumaï, ancêtre de l'Humanité",
+                categorie: 'Événement',
+                date: '2026-07-21',
+                image: toumaiAssetPath('affiche_Paysage.png'),
+                resume: "Le CNRD organise les 21 et 22 juillet 2026 le 2e Colloque International de Paléontologie, sous le Haut Patronage du Président de la République, à l'occasion des 25 ans de la découverte de Toumaï.",
+                contenuHtml: [
+                    '<p>Le Centre National de Recherche pour le Développement (CNRD) organise, les <strong>21 et 22 juillet 2026</strong>, le <strong>2ᵉ Colloque International de Paléontologie</strong>, sur le thème : « Tchad au cœur de l\'humanité : lectures croisées des archives paléontologiques et géologiques ».</p>',
+                    '<p>Cet événement marque les <strong>25 ans de la découverte de Toumaï (Sahelanthropus tchadensis)</strong>, ancêtre de l\'Humanité mis au jour au Tchad, et se tient sous le Haut Patronage du Président de la République du Tchad, Maréchal Mahamat Idriss Deby Itno.</p>',
+                    '<p><strong>Lieu :</strong> Salle de conférence du Ministère en charge des Affaires Étrangères, N\'Djamena.</p>',
+                    '<p>Le colloque réunira des chercheurs et institutions internationales autour de quatre sessions thématiques : Paléoprimatologie et Paléoanthropologie, Paléobiodiversité et Paléoenvironnements, Géologie/sédimentologie et bassins sédimentaires, ainsi que Hydrogéologie, environnement et ressources en eau.</p>',
+                    '<p><a href="' + toumaiAssetPath('draft agenda_vCO_MNA1.pdf') + '" target="_blank" rel="noopener noreferrer">Télécharger le programme complet (PDF)</a></p>'
+                ].join(''),
+                contenu: "Le Centre National de Recherche pour le Développement (CNRD) organise, les 21 et 22 juillet 2026, le 2e Colloque International de Paléontologie, sur le theme : « Tchad au cœur de l'humanité : lectures croisées des archives paléontologiques et géologiques ».\n\nCet événement marque les 25 ans de la découverte de Toumaï (Sahelanthropus tchadensis), ancêtre de l'Humanité mis au jour au Tchad, et se tient sous le Haut Patronage du Président de la République du Tchad, Maréchal Mahamat Idriss Deby Itno.\n\nLieu : Salle de conférence du Ministère en charge des Affaires Étrangères, N'Djamena."
             });
             /** Seeded news only, sorted most recent first */
             function getAllNews() {
